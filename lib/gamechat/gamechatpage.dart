@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'gamechatcomponents/imgbuttoncomponent.dart';
-import 'gamechatcomponents/pgview.dart';
+import 'gamechatcomponents/characterpanel.dart';
 
 class GameChatPage extends StatelessWidget {
   const GameChatPage({super.key});
@@ -12,7 +12,17 @@ class GameChatPage extends StatelessWidget {
       id: 'option1',
       name: 'Arden',
       imageUrl: 'https://picsum.photos/seed/hero1/400',
-      stats: {'hp': 120, 'atk': 34, 'def': 20},
+      stats: {
+        'hpbaseline': 140,
+        'hpcurrent': 120,
+        'level': 6,
+        'strenght': 16,
+        'dexterity': 12,
+        'constitution': 15,
+        'intelligence': 10,
+        'wisdom': 11,
+        'charisma': 9,
+      },
       inventory: {
         'gold': 250,
         'items': ['Potion', 'Elixir'],
@@ -25,7 +35,17 @@ class GameChatPage extends StatelessWidget {
       id: 'option2',
       name: 'Lyra',
       imageUrl: 'https://picsum.photos/seed/hero2/400',
-      stats: {'hp': 90, 'atk': 48, 'def': 12},
+      stats: {
+        'hpbaseline': 100,
+        'hpcurrent': 88,
+        'level': 5,
+        'strenght': 10,
+        'dexterity': 17,
+        'constitution': 11,
+        'intelligence': 13,
+        'wisdom': 12,
+        'charisma': 14,
+      },
       inventory: {
         'gold': 180,
         'items': ['Dagger', 'Smoke Bomb'],
@@ -38,7 +58,17 @@ class GameChatPage extends StatelessWidget {
       id: 'option3',
       name: 'Torin',
       imageUrl: 'https://picsum.photos/seed/hero3/400',
-      stats: {'hp': 160, 'atk': 26, 'def': 40},
+      stats: {
+        'hpbaseline': 180,
+        'hpcurrent': 165,
+        'level': 7,
+        'strenght': 18,
+        'dexterity': 9,
+        'constitution': 17,
+        'intelligence': 8,
+        'wisdom': 10,
+        'charisma': 7,
+      },
       inventory: {
         'gold': 95,
         'items': ['Greatshield', 'Rations'],
@@ -51,7 +81,17 @@ class GameChatPage extends StatelessWidget {
       id: 'option4',
       name: 'Nia',
       imageUrl: 'https://picsum.photos/seed/hero4/400',
-      stats: {'hp': 110, 'atk': 30, 'def': 18},
+      stats: {
+        'hpbaseline': 120,
+        'hpcurrent': 110,
+        'level': 6,
+        'strenght': 9,
+        'dexterity': 13,
+        'constitution': 12,
+        'intelligence': 17,
+        'wisdom': 15,
+        'charisma': 12,
+      },
       inventory: {
         'gold': 310,
         'items': ['Staff', 'Mana Potion'],
@@ -118,7 +158,7 @@ class GameChatPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    PgView(
+                    CharacterPanel(
                       hero: _heroes.firstWhere(
                         (HeroData hero) => hero.id == imageData.selectedId,
                         orElse: () => _heroes.first,

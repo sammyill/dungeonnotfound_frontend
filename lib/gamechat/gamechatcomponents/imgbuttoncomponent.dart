@@ -36,7 +36,6 @@ class ImgButtonComponent extends StatelessWidget {
           Container(
             width: itemDiameter,
             height: itemDiameter,
-          
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: isSelected

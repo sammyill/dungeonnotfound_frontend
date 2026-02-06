@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'characterstats.dart';
+
 class HeroData {
   final String id;
   final String name;
@@ -38,10 +40,36 @@ class ImageButtonData extends ChangeNotifier {
   }
 }
 
-class PgView extends StatelessWidget {
+class CharacterPanel extends StatelessWidget {
   final HeroData hero;
 
-  const PgView({super.key, required this.hero});
+  const CharacterPanel({super.key, required this.hero});
+
+  Widget _buildHeroImage() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: Image.network(
+        hero.imageUrl,
+        width: double.infinity,
+        height: 220,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            width: double.infinity,
+            height: 220,
+            color: const Color.fromARGB(255, 20, 210, 128),
+            child: const Center(
+              child: Icon(
+                Icons.image_not_supported,
+                size: 40,
+                color: Colors.white54,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,46 +92,16 @@ class PgView extends StatelessWidget {
             hero.name,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
             ),
           ),
           const SizedBox(height: 12),
-          Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  hero.imageUrl,
-                  width: 80,
-                  height: 80,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return const SizedBox(
-                      width: 80,
-                      height: 80,
-                      child: Center(
-                        child: Icon(
-                          Icons.image_not_supported,
-                          size: 28,
-                          color: Colors.white54,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  'Stats: ${hero.stats}\\n'
-                  'Inventory: ${hero.inventory}\\n'
-                  'Abilities: ${hero.abilities}',
-                  style: const TextStyle(color: Colors.white70),
-                ),
-              ),
-            ],
-          ),
+          _buildHeroImage(),
+          const SizedBox(height: 16),
+          CharacterStats(stats: hero.stats),
+          const SizedBox(height: 16),
+          // Inventory and abilities widgets will go here later.
         ],
       ),
     );
