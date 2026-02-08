@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'gamechatcomponents/imgbuttoncomponent.dart';
-import 'gamechatcomponents/characterpanel.dart';
+import 'gamechatcomponents/characterspanel.dart';
 
 class GameChatPage extends StatelessWidget {
   const GameChatPage({super.key});
@@ -102,71 +100,64 @@ class GameChatPage extends StatelessWidget {
     ),
   ];
 
-  static final List<Map<String, String>> _buttons = _heroes
-      .map(
-        (HeroData hero) => <String, String>{
-          'id': hero.id,
-          'imageUrl': hero.imageUrl,
-        },
-      )
-      .toList();
+  static final List<String> _heroIds = _heroes
+      .map((HeroData hero) => hero.id)
+      .toList(growable: false);
+
+  static HeroData _heroById(String heroId) {
+    return _heroes.firstWhere(
+      (HeroData hero) => hero.id == heroId,
+      orElse: () => _heroes.first,
+    );
+  }
+
+  Widget _buildGameChatPlaceholder() {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 28, 20, 12),
+        border: Border.all(
+          color: const Color.fromARGB(255, 189, 88, 0),
+          width: 2,
+        ),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: const Center(
+        child: Text(
+          'Game Chat Placeholder',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ImageButtonData>(
-      create: (BuildContext context) => ImageButtonData(buttons: _buttons),
-      child: SizedBox.expand(
-        child: Consumer<ImageButtonData>(
-          builder:
-              (BuildContext context, ImageButtonData imageData, Widget? child) {
-                if (imageData.buttons.isEmpty) {
-                  return const SizedBox.shrink();
-                }
+    if (_heroes.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 121, 57, 0),
-                        border: Border.all(
-                          color: const Color.fromARGB(255, 189, 88, 0),
-                          width: 2,
-                        ),
-                      ),
-                      padding: const EdgeInsets.all(8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: imageData.buttons.map<Widget>((
-                          Map<String, String> buttonMap,
-                        ) {
-                          final String id = buttonMap['id']!;
-                          final String imageUrl = buttonMap['imageUrl']!;
-                          final bool isSelected = imageData.selectedId == id;
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: ImgButtonComponent(
-                              id: id,
-                              imageUrl: imageUrl,
-                              isSelected: isSelected,
-                              onTap: () => imageData.selectButton(id),
-                              itemDiameter: 90.0,
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    CharacterPanel(
-                      hero: _heroes.firstWhere(
-                        (HeroData hero) => hero.id == imageData.selectedId,
-                        orElse: () => _heroes.first,
-                      ),
-                    ),
-                  ],
-                );
-              },
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(flex: 2, child: _buildGameChatPlaceholder()),
+            const SizedBox(width: 16),
+            Expanded(
+              flex: 1,
+             
+                child: DNDCharactersPanel(
+                  hero: _heroes.first,
+                  heroIds: _heroIds,
+                  heroById: _heroById,
+                ),
+            ),
+          ],
         ),
       ),
     );

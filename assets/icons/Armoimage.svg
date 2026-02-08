@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none" role="img" aria-label="AC badge">
+  <circle cx="32" cy="32" r="30" fill="#fff" stroke="#000" stroke-width="3"/>
+
+  <g stroke="#000" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+    <!-- Base shield -->
+    <path fill="#9E9E9E" d="M32 14 L48 20 V34
+      C48 44 41 51 32 54
+      C23 51 16 44 16 34 V20 Z"/>
+
+    <!-- Shadow -->
+    <path fill="#616161" d="M40 22 L48 20 V34
+      C48 44 41 51 32 54 V30
+      C36.5 28.5 38.8 26.1 40 22 Z"/>
+
+    <!-- Center ridge + rivets -->
+    <path fill="none" d="M32 18 V50"/>
+    <g fill="#fff" stroke="none">
+      <circle cx="24" cy="24" r="1.2"/>
+      <circle cx="40" cy="24" r="1.2"/>
+      <circle cx="24" cy="34" r="1.2"/>
+      <circle cx="40" cy="34" r="1.2"/>
+    </g>
+
+    <!-- Highlight -->
+    <path fill="#fff" stroke="none" d="M20.5 22.5
+      C23.5 20.8 26.5 20.2 29.5 20.6
+      C28.5 24.2 24.8 25.4 20.5 24.1 Z"/>
+  </g>
+</svg>

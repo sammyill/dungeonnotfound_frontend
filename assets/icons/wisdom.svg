@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none" role="img" aria-label="WIS badge">
+  <circle cx="32" cy="32" r="30" fill="#fff" stroke="#000" stroke-width="3"/>
+
+  <g stroke="#000" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+    <!-- Base -->
+    <path fill="#FBC02D" d="M12 32 C16 24 23 20 32 20 C41 20 48 24 52 32 C48 40 41 44 32 44 C23 44 16 40 12 32 Z"/>
+
+    <!-- Shadow (lower lid) -->
+    <path fill="#F9A825" d="M14.5 34.2 C19 40.3 25 43 32 43 C39 43 45 40.3 49.5 34.2 C48.4 38.6 42 44 32 44 C22 44 15.6 38.6 14.5 34.2 Z"/>
+
+    <!-- Iris -->
+    <circle cx="32" cy="32" r="7" fill="#FBC02D"/>
+    <circle cx="32" cy="32" r="3" fill="#000" stroke="none"/>
+
+    <!-- Highlights (more “emblem” look) -->
+    <g fill="#fff" stroke="none">
+      <path d="M24.2 27.2 C26.5 25.4 29.3 24.6 32 24.8 C30.7 28.2 27.4 29.4 24.2 28.1 Z"/>
+      <circle cx="30.5" cy="30.5" r="1"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none" role="img" aria-label="Spells badge">
+  <circle cx="32" cy="32" r="30" fill="#fff" stroke="#000" stroke-width="3"/>
+
+  <g stroke="#000" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+    <!-- Rays -->
+    <g fill="none">
+      <path d="M32 12 V18"/>
+      <path d="M32 46 V52"/>
+      <path d="M12 32 H18"/>
+      <path d="M46 32 H52"/>
+      <path d="M18.5 18.5 L22.7 22.7"/>
+      <path d="M41.3 41.3 L45.5 45.5"/>
+      <path d="M45.5 18.5 L41.3 22.7"/>
+      <path d="M22.7 41.3 L18.5 45.5"/>
+    </g>
+
+    <!-- Orb base -->
+    <circle cx="32" cy="32" r="12" fill="#90CAF9"/>
+
+    <!-- Orb shadow (right/lower) -->
+    <path fill="#42A5F5" d="M32 20
+      C38.6 20 44 25.4 44 32
+      C44 38.6 38.6 44 32 44 Z"/>
+
+    <!-- Inner core -->
+    <circle cx="32" cy="32" r="5.5" fill="#E3F2FD"/>
+
+    <!-- Highlight -->
+    <g fill="#fff" stroke="none">
+      <path d="M24.6 28.2
+               C25.6 24.6 28.6 22.6 32 22.8
+               C30.8 26.8 27.8 28.8 24.6 28.2 Z"/>
+      <circle cx="28.5" cy="27.5" r="1.1"/>
+    </g>
+  </g>
+</svg>
