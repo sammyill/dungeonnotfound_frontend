@@ -5,20 +5,20 @@ class DNDStatsDisplay extends StatelessWidget {
   final String iconAssetPath;
   final String statName;
   final String value;
-  static const EdgeInsetsGeometry contentPadding=const EdgeInsets.symmetric(horizontal: 14);
-   static const BorderRadius borderRadius=const BorderRadius.all(Radius.circular(10));
-  static const TextStyle? labelStyle = TextStyle(
+  static const EdgeInsetsGeometry contentPadding=EdgeInsets.symmetric(horizontal: 14);
+   static const BorderRadius borderRadius=BorderRadius.all(Radius.circular(10));
+  static const TextStyle labelStyle = TextStyle(
     color: Color.fromARGB(255, 0, 0, 0),
     fontSize: 14,
     fontWeight: FontWeight.w600,
   );
-  static const TextStyle? valueStyle = TextStyle(
+  static const TextStyle valueStyle = TextStyle(
     color: Color.fromARGB(255, 0, 0, 0),
     fontSize: 15,
     fontWeight: FontWeight.w800,
   );
-  static const String scrollBackgroundAssetPath =
-      'assets/images/scrollbackground.png';
+  static String scrollBackgroundAssetPath =
+      'assets/images/scroll.png';
 
   const DNDStatsDisplay({
     super.key,
