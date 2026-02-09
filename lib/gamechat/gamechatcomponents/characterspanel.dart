@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 
 import 'characterstats.dart';
 import 'imgbuttoncomponent.dart';
+
 class HeroData {
   final String id;
   final String name;
@@ -37,12 +39,19 @@ class DNDCharactersPanel extends StatefulWidget {
 }
 
 class _DNDCharactersPanelState extends State<DNDCharactersPanel> {
+  final ScrollController _headerScrollController = ScrollController();
   late String _selectedHeroId;
 
   @override
   void initState() {
     super.initState();
     _selectedHeroId = _resolveInitialSelectedId();
+  }
+
+  @override
+  void dispose() {
+    _headerScrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -98,32 +107,54 @@ class _DNDCharactersPanelState extends State<DNDCharactersPanel> {
     );
   }
 
-  Widget _buildHeroButtons() {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 121, 57, 0),
-        border: Border.all(
-          color: const Color.fromARGB(255, 189, 88, 0),
-          width: 2,
+  
+
+
+  Widget _buildHeroButtons({
+    required double height,
+    required double itemDiameter,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      height: height,
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 121, 57, 0),
+          border: Border.all(
+            color: const Color.fromARGB(255, 189, 88, 0),
+            width: 2,
+          ),
+        ),
+        padding: const EdgeInsets.all(8),
+        child: ScrollConfiguration(
+          behavior: const MaterialScrollBehavior().copyWith(
+            dragDevices: {
+              PointerDeviceKind.touch,
+              PointerDeviceKind.mouse,
+              PointerDeviceKind.trackpad,
+              PointerDeviceKind.stylus,
+            },
+          ),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: widget.heroIds.map((heroId) {
+                final hero = widget.heroById(heroId);
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: ImgButtonComponent(
+                    id: heroId,
+                    imageUrl: hero.imageUrl,
+                    isSelected: _selectedHeroId == heroId,
+                    onTap: () => _selectHero(heroId),
+                    itemDiameter: itemDiameter,
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
         ),
       ),
-      padding: const EdgeInsets.all(8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: widget.heroIds.map<Widget>((String heroId) {
-            final HeroData hero = widget.heroById(heroId);
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: ImgButtonComponent(
-                id: heroId,
-                imageUrl: hero.imageUrl,
-                isSelected: _selectedHeroId == heroId,
-                onTap: () => _selectHero(heroId),
-                itemDiameter: 90.0,
-              ),
-            );
-          }).toList(),
-        ),
     );
   }
 
@@ -170,14 +201,25 @@ class _DNDCharactersPanelState extends State<DNDCharactersPanel> {
 
     final HeroData selectedHero = widget.heroById(_selectedHeroId);
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildHeroButtons(),
-        const SizedBox(height: 16),
-        _buildSelectedHeroPanel(selectedHero),
-      ],
+    return SizedBox.expand(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final buttonsHeight = constraints.maxHeight * 0.20;
+          final itemDiameter = buttonsHeight * 0.72;
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeroButtons(
+                height: buttonsHeight,
+                itemDiameter: itemDiameter,
+              ),
+              const SizedBox(height: 16),
+              Expanded(child: _buildSelectedHeroPanel(selectedHero)),
+            ],
+          );
+        },
+      ),
     );
   }
 }

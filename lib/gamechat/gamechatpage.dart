@@ -140,26 +140,29 @@ class GameChatPage extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(flex: 2, child: _buildGameChatPlaceholder()),
-            const SizedBox(width: 16),
-            Expanded(
-              flex: 1,
-             
+     return Scaffold(
+    body: SizedBox.expand(
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(flex: 2, child: _buildGameChatPlaceholder()),
+              const SizedBox(width: 16),
+              Expanded(
+                flex: 1,
                 child: DNDCharactersPanel(
                   hero: _heroes.first,
                   heroIds: _heroIds,
                   heroById: _heroById,
                 ),
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
-    );
+    ),
+  );
   }
 }
