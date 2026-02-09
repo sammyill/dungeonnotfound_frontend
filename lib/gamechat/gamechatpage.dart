@@ -10,6 +10,7 @@ class GameChatPage extends StatelessWidget {
       id: 'option1',
       name: 'Arden',
       imageUrl: 'https://picsum.photos/seed/hero1/400',
+      imagePortrait:"",
       stats: {
         'hpbaseline': 140,
         'hpcurrent': 120,
@@ -33,6 +34,7 @@ class GameChatPage extends StatelessWidget {
       id: 'option2',
       name: 'Lyra',
       imageUrl: 'https://picsum.photos/seed/hero2/400',
+      imagePortrait:"",
       stats: {
         'hpbaseline': 100,
         'hpcurrent': 88,
@@ -56,6 +58,7 @@ class GameChatPage extends StatelessWidget {
       id: 'option3',
       name: 'Torin',
       imageUrl: 'https://picsum.photos/seed/hero3/400',
+      imagePortrait:"",
       stats: {
         'hpbaseline': 180,
         'hpcurrent': 165,
@@ -79,6 +82,7 @@ class GameChatPage extends StatelessWidget {
       id: 'option4',
       name: 'Nia',
       imageUrl: 'https://picsum.photos/seed/hero4/400',
+       imagePortrait:"",
       stats: {
         'hpbaseline': 120,
         'hpcurrent': 110,
