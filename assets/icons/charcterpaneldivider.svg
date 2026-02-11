@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2048" height="128" viewBox="0 0 2048 128" fill="none" role="img" aria-label="Gold filigree divider">
+  <!-- Transparent background by default -->
+  <!-- Colors -->
+  <!-- shadow: #785619 | base: #D4AA46 | highlight: #FFF2BE -->
+
+  <!-- SHADOW layer -->
+  <g stroke="#785619" stroke-linecap="round" stroke-linejoin="round" fill="#785619" opacity="1">
+    <!-- main line -->
+    <path d="M120 65 H1928" stroke-width="12" fill="none"/>
+    <!-- end caps -->
+    <circle cx="120" cy="65" r="13"/>
+    <circle cx="1928" cy="65" r="13"/>
+
+    <!-- curls -->
+    <path d="M1024 64 Q954 30 884 64 Q914 104 964 74" stroke-width="10" fill="none"/>
+    <path d="M1024 64 Q1094 30 1164 64 Q1134 104 1084 74" stroke-width="10" fill="none"/>
+
+    <!-- center diamond -->
+    <polygon points="1024,47 1042,64 1024,81 1006,64"/>
+
+    <!-- leaf accents -->
+    <path d="M1002 48 L982 36 L962 48 Z" stroke-width="8" />
+    <path d="M1046 48 L1066 36 L1086 48 Z" stroke-width="8" />
+    <path d="M1002 80 L982 92 L962 80 Z" stroke-width="8" />
+    <path d="M1046 80 L1066 92 L1086 80 Z" stroke-width="8" />
+  </g>
+
+  <!-- BASE layer -->
+  <g stroke="#D4AA46" stroke-linecap="round" stroke-linejoin="round" fill="#D4AA46">
+    <path d="M120 64 H1928" stroke-width="8" fill="none"/>
+    <circle cx="120" cy="64" r="10"/>
+    <circle cx="1928" cy="64" r="10"/>
+
+    <path d="M1024 64 Q954 30 884 64 Q914 104 964 74" stroke-width="6" fill="none"/>
+    <path d="M1024 64 Q1094 30 1164 64 Q1134 104 1084 74" stroke-width="6" fill="none"/>
+
+    <polygon points="1024,49 1039,64 1024,79 1009,64"/>
+
+    <path d="M1002 48 L982 36 L962 48 Z" stroke-width="5" />
+    <path d="M1046 48 L1066 36 L1086 48 Z" stroke-width="5" />
+    <path d="M1002 80 L982 92 L962 80 Z" stroke-width="5" />
+    <path d="M1046 80 L1066 92 L1086 80 Z" stroke-width="5" />
+  </g>
+
+  <!-- HIGHLIGHT layer -->
+  <g stroke="#FFF2BE" stroke-linecap="round" stroke-linejoin="round" fill="#FFF2BE">
+    <path d="M120 63 H1928" stroke-width="3" fill="none"/>
+    <circle cx="120" cy="63" r="5"/>
+    <circle cx="1928" cy="63" r="5"/>
+
+    <path d="M1024 64 Q954 30 884 64 Q914 104 964 74" stroke-width="2" fill="none"/>
+    <path d="M1024 64 Q1094 30 1164 64 Q1134 104 1084 74" stroke-width="2" fill="none"/>
+
+    <polygon points="1024,57 1031,64 1024,71 1017,64"/>
+
+    <path d="M1002 48 L982 36 L962 48 Z" stroke-width="2" />
+    <path d="M1046 48 L1066 36 L1086 48 Z" stroke-width="2" />
+    <path d="M1002 80 L982 92 L962 80 Z" stroke-width="2" />
+    <path d="M1046 80 L1066 92 L1086 80 Z" stroke-width="2" />
+  </g>
+</svg>

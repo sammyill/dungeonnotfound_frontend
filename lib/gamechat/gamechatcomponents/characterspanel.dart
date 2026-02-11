@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'characterstats.dart';
 import 'imgbuttoncomponent.dart';
@@ -26,6 +27,8 @@ class HeroData {
   });
 }
 
+enum HeroPanelTab { stats, inventory, abilities }
+
 class DNDCharactersPanel extends StatefulWidget {
   final HeroData hero;
   final List<String> heroIds;
@@ -45,6 +48,7 @@ class DNDCharactersPanel extends StatefulWidget {
 class _DNDCharactersPanelState extends State<DNDCharactersPanel> {
   final ScrollController _headerScrollController = ScrollController();
   late String _selectedHeroId;
+  HeroPanelTab _selectedTab = HeroPanelTab.stats;
 
   @override
   void initState() {
@@ -82,6 +86,16 @@ class _DNDCharactersPanelState extends State<DNDCharactersPanel> {
     }
     setState(() {
       _selectedHeroId = heroId;
+      _selectedTab = HeroPanelTab.stats;
+    });
+  }
+
+  void _selectTab(HeroPanelTab tab) {
+    if (_selectedTab == tab) {
+      return;
+    }
+    setState(() {
+      _selectedTab = tab;
     });
   }
 
@@ -173,38 +187,76 @@ class _DNDCharactersPanelState extends State<DNDCharactersPanel> {
   }
 
   Widget _buildSelectedHeroPanel(HeroData hero) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 68, 34, 0),
-        border: Border.all(
-          color: const Color.fromARGB(255, 189, 88, 0),
-          width: 2,
-        ),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            hero.name,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.w700,
+    return Stack(
+      children: [
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 68, 34, 0),
+            border: Border.all(
+              color: const Color.fromARGB(255, 189, 88, 0),
+              width: 2,
             ),
+            borderRadius: BorderRadius.circular(12),
           ),
-          const SizedBox(height: 12),
-          _buildHeroImage(hero),
-          const SizedBox(height: 16),
-          CharacterStats(stats: hero.stats),
-          const SizedBox(height: 16),
-          // Inventory and abilities widgets will go here later.
-        ],
-      ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "${hero.name} lv.${hero.stats["level"]}",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 12),
+              _buildHeroImage(hero),
+              const SizedBox(height: 16),
+              _buildPanelContent(hero),
+            ],
+          ),
+        ),
+        Positioned(
+          top: 12,
+          right: 12,
+          child: Row(
+            children: [
+              _PanelIconButton(
+                assetPath: 'assets/icons/Character.svg',
+                isSelected: _selectedTab == HeroPanelTab.stats,
+                onTap: () => _selectTab(HeroPanelTab.stats),
+              ),
+              const SizedBox(width: 8),
+              _PanelIconButton(
+                assetPath: 'assets/icons/inventory.svg',
+                isSelected: _selectedTab == HeroPanelTab.inventory,
+                onTap: () => _selectTab(HeroPanelTab.inventory),
+              ),
+              const SizedBox(width: 8),
+              _PanelIconButton(
+                assetPath: 'assets/icons/abilities.svg',
+                isSelected: _selectedTab == HeroPanelTab.abilities,
+                onTap: () => _selectTab(HeroPanelTab.abilities),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
+  }
+
+  Widget _buildPanelContent(HeroData hero) {
+    switch (_selectedTab) {
+      case HeroPanelTab.stats:
+        return HeroPanelsStats(hero: hero);
+      case HeroPanelTab.inventory:
+        return HeroInventory(hero: hero);
+      case HeroPanelTab.abilities:
+        return HeroAbilities(hero: hero);
+    }
   }
 
   @override
@@ -233,6 +285,108 @@ class _DNDCharactersPanelState extends State<DNDCharactersPanel> {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+class _PanelIconButton extends StatelessWidget {
+  final String assetPath;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _PanelIconButton({
+    required this.assetPath,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final Color borderColor = isSelected
+        ? const Color.fromARGB(255, 235, 180, 70)
+        : Colors.white30;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: borderColor, width: 2),
+        ),
+        child: SvgPicture.asset(
+          assetPath,
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+  }
+}
+
+class HeroPanelsStats extends StatelessWidget {
+  final HeroData hero;
+
+  const HeroPanelsStats({super.key, required this.hero});
+
+  @override
+  Widget build(BuildContext context) {
+    return CharacterStats(stats: hero.stats);
+  }
+}
+
+class HeroInventory extends StatelessWidget {
+  final HeroData hero;
+
+  const HeroInventory({super.key, required this.hero});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 180,
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 92, 55, 10),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: const Color.fromARGB(255, 189, 88, 0),
+          width: 1,
+        ),
+      ),
+      child: const Center(
+        child: Text(
+          'Inventory (placeholder)',
+          style: TextStyle(color: Colors.white70),
+        ),
+      ),
+    );
+  }
+}
+
+class HeroAbilities extends StatelessWidget {
+  final HeroData hero;
+
+  const HeroAbilities({super.key, required this.hero});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 180,
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 92, 55, 10),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: const Color.fromARGB(255, 189, 88, 0),
+          width: 1,
+        ),
+      ),
+      child: const Center(
+        child: Text(
+          'Abilities (placeholder)',
+          style: TextStyle(color: Colors.white70),
+        ),
       ),
     );
   }
