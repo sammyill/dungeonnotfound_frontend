@@ -45,7 +45,7 @@ class ImgButtonComponent extends StatelessWidget {
             child: ClipOval(
               child: ColoredBox(
                 color: Colors.grey.shade200,
-                child: Image.network(
+                child: Image.asset(
                   imageUrl,
                   width: innerSize,
                   height: innerSize,

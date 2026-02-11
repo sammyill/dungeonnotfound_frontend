@@ -9,8 +9,9 @@ class GameChatPage extends StatelessWidget {
     HeroData(
       id: 'option1',
       name: 'Arden',
-      imageUrl: 'https://picsum.photos/seed/hero1/400',
-      imagePortrait:"",
+      imageUrl: 'assets/images/paladinfullbody.webp',
+      imagePortrait: 'assets/images/paladinportrait.png',
+      characterclass: "paladin",
       stats: {
         'hpbaseline': 140,
         'hpcurrent': 120,
@@ -33,8 +34,9 @@ class GameChatPage extends StatelessWidget {
     HeroData(
       id: 'option2',
       name: 'Lyra',
-      imageUrl: 'https://picsum.photos/seed/hero2/400',
-      imagePortrait:"",
+      imageUrl: 'assets/images/clericfullbody.webp',
+      imagePortrait: 'assets/images/clericportrait.png',
+      characterclass: "cleric",
       stats: {
         'hpbaseline': 100,
         'hpcurrent': 88,
@@ -57,8 +59,9 @@ class GameChatPage extends StatelessWidget {
     HeroData(
       id: 'option3',
       name: 'Torin',
-      imageUrl: 'https://picsum.photos/seed/hero3/400',
-      imagePortrait:"",
+      imageUrl: 'assets/images/thieffullbody.webp',
+      imagePortrait: 'assets/images/thiefportrait.png',
+      characterclass: "thief",
       stats: {
         'hpbaseline': 180,
         'hpcurrent': 165,
@@ -81,8 +84,9 @@ class GameChatPage extends StatelessWidget {
     HeroData(
       id: 'option4',
       name: 'Nia',
-      imageUrl: 'https://picsum.photos/seed/hero4/400',
-       imagePortrait:"",
+      imageUrl: 'assets/images/wizardfullbody.webp',
+      imagePortrait: 'assets/images/wizardportrait.png',
+      characterclass: "wizard",
       stats: {
         'hpbaseline': 120,
         'hpcurrent': 110,
@@ -144,29 +148,29 @@ class GameChatPage extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-     return Scaffold(
-    body: SizedBox.expand(
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(flex: 2, child: _buildGameChatPlaceholder()),
-              const SizedBox(width: 16),
-              Expanded(
-                flex: 1,
-                child: DNDCharactersPanel(
-                  hero: _heroes.first,
-                  heroIds: _heroIds,
-                  heroById: _heroById,
+    return Scaffold(
+      body: SizedBox.expand(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(flex: 2, child: _buildGameChatPlaceholder()),
+                const SizedBox(width: 16),
+                Expanded(
+                  flex: 1,
+                  child: DNDCharactersPanel(
+                    hero: _heroes.first,
+                    heroIds: _heroIds,
+                    heroById: _heroById,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
-    ),
-  );
+    );
   }
 }

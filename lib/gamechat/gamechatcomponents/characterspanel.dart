@@ -9,6 +9,7 @@ class HeroData {
   final String name;
   final String imageUrl;
   final String imagePortrait;
+  final String characterclass;
   final Map<String, dynamic> stats;
   final Map<String, dynamic> inventory;
   final Map<String, dynamic> abilities;
@@ -18,6 +19,7 @@ class HeroData {
     required this.name,
     required this.imageUrl,
     required this.imagePortrait,
+    required this.characterclass,
     required this.stats,
     required this.inventory,
     required this.abilities,
@@ -86,7 +88,7 @@ class _DNDCharactersPanelState extends State<DNDCharactersPanel> {
   Widget _buildHeroImage(HeroData hero) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(12),
-      child: Image.network(
+      child: Image.asset(
         hero.imageUrl,
         width: double.infinity,
         height: 220,
@@ -137,32 +139,34 @@ class _DNDCharactersPanelState extends State<DNDCharactersPanel> {
             },
           ),
           child: RawScrollbar(
-  controller: controller,
-  thumbVisibility: true,
-  trackVisibility: true,
-  interactive: true,
-  thickness: 14,
-  radius: const Radius.circular(12),
-  scrollbarOrientation: ScrollbarOrientation.bottom,
-  child: ListView.separated(
-    controller: controller,
-    scrollDirection: Axis.horizontal,
-    padding: const EdgeInsets.only(bottom: 18), // <— important: leaves grab space
-    itemCount: widget.heroIds.length,
-    separatorBuilder: (_, __) => const SizedBox(width: 16),
-    itemBuilder: (context, index) {
-      final heroId = widget.heroIds[index];
-      final hero = widget.heroById(heroId);
-      return ImgButtonComponent(
-        id: heroId,
-        imageUrl: hero.imageUrl,
-        isSelected: _selectedHeroId == heroId,
-        onTap: () => _selectHero(heroId),
-        itemDiameter: itemDiameter,
-      );
-    },
-  ),
-),
+            controller: controller,
+            thumbVisibility: true,
+            trackVisibility: true,
+            interactive: true,
+            thickness: 14,
+            radius: const Radius.circular(12),
+            scrollbarOrientation: ScrollbarOrientation.bottom,
+            child: ListView.separated(
+              controller: controller,
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.only(
+                bottom: 18,
+              ), // <— important: leaves grab space
+              itemCount: widget.heroIds.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 16),
+              itemBuilder: (context, index) {
+                final heroId = widget.heroIds[index];
+                final hero = widget.heroById(heroId);
+                return ImgButtonComponent(
+                  id: heroId,
+                  imageUrl: hero.imagePortrait,
+                  isSelected: _selectedHeroId == heroId,
+                  onTap: () => _selectHero(heroId),
+                  itemDiameter: itemDiameter,
+                );
+              },
+            ),
+          ),
         ),
       ),
     );
