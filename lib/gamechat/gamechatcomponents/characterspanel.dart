@@ -213,9 +213,7 @@ class _DNDCharactersPanelState extends State<DNDCharactersPanel> {
                 ),
               ),
               const SizedBox(height: 12),
-              _buildHeroImage(hero),
-              const SizedBox(height: 16),
-              _buildPanelContent(hero),
+              Expanded(child: _buildPanelContent(hero)),
             ],
           ),
         ),
@@ -316,10 +314,7 @@ class _PanelIconButton extends StatelessWidget {
           shape: BoxShape.circle,
           border: Border.all(color: borderColor, width: 2),
         ),
-        child: SvgPicture.asset(
-          assetPath,
-          fit: BoxFit.contain,
-        ),
+        child: SvgPicture.asset(assetPath, fit: BoxFit.contain),
       ),
     );
   }
@@ -332,7 +327,56 @@ class HeroPanelsStats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CharacterStats(stats: hero.stats);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double statsHeight = constraints.maxHeight * 0.30;
+
+        return Stack(
+          fit: StackFit.expand,
+          children: [
+            _HeroImageFill(imagePath: hero.imageUrl),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              height: statsHeight,
+              child: Center(child: CharacterStats(stats: hero.stats)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _HeroImageFill extends StatelessWidget {
+  final String imagePath;
+
+  const _HeroImageFill({required this.imagePath});
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: Image.asset(
+        imagePath,
+        width: double.infinity,
+        height: double.infinity,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: const Color.fromARGB(255, 20, 210, 128),
+            child: const Center(
+              child: Icon(
+                Icons.image_not_supported,
+                size: 40,
+                color: Colors.white54,
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 }
 
