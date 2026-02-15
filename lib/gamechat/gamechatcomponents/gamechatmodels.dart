@@ -1,3 +1,43 @@
+enum InventoryObjectType { onehand, twohand, armor, consumable, item, unknown }
+
+extension InventoryObjectTypeParsing on InventoryObjectType {
+  static InventoryObjectType fromString(String? value) {
+    final normalized = (value ?? '').trim().toLowerCase();
+    switch (normalized) {
+      case 'onehand':
+        return InventoryObjectType.onehand;
+      case 'twohand':
+        return InventoryObjectType.twohand;
+      case 'armor':
+        return InventoryObjectType.armor;
+      case 'consumable':
+        return InventoryObjectType.consumable;
+      case 'item':
+      case '':
+        return InventoryObjectType.item;
+      default:
+        return InventoryObjectType.unknown;
+    }
+  }
+
+  String toJsonValue() {
+    switch (this) {
+      case InventoryObjectType.onehand:
+        return 'onehand';
+      case InventoryObjectType.twohand:
+        return 'twohand';
+      case InventoryObjectType.armor:
+        return 'armor';
+      case InventoryObjectType.consumable:
+        return 'consumable';
+      case InventoryObjectType.item:
+        return 'item';
+      case InventoryObjectType.unknown:
+        return 'unknown';
+    }
+  }
+}
+
 class CurrencyData {
   final int gp;
   final int sp;
@@ -21,7 +61,7 @@ class InventoryItemData {
   final String name;
   final String image;
   final int quantity;
-  final String objectType;
+  final InventoryObjectType objectType;
   final String description;
 
   const InventoryItemData({
@@ -38,20 +78,22 @@ class InventoryItemData {
       id: json['id'] as String,
       name: json['name'] as String,
       image: json['image'] as String,
-      objectType:json["objectType"] as String,
+      objectType: InventoryObjectTypeParsing.fromString(
+        json['objectType'] as String?,
+      ),
       quantity: (json['quantity'] ?? 1) as int,
       description: (json['description'] ?? '') as String,
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'image': image,
-        'quantity': quantity,
-        'objectType':objectType,
-        'description': description,
-      };
+    'id': id,
+    'name': name,
+    'image': image,
+    'quantity': quantity,
+    'objectType': objectType.toJsonValue(),
+    'description': description,
+  };
 }
 
 class InventoryData {
@@ -73,17 +115,39 @@ class InventoryData {
       currency: CurrencyData.fromJson(
         (json['currency'] as Map<String, dynamic>? ?? const {}),
       ),
-      equippedSlots: (json['equippedSlots'] as Map<String, dynamic>? ?? const {})
-          .map((k, v) => MapEntry(k, v as String?)),
+      equippedSlots:
+          (json['equippedSlots'] as Map<String, dynamic>? ?? const {}).map(
+            (k, v) => MapEntry(k, v as String?),
+          ),
       items: ((json['items'] as List<dynamic>? ?? const []))
           .map((e) => InventoryItemData.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
   }
 
+  InventoryItemData? findItemById(String? id) {
+    if (id == null) {
+      return null;
+    }
+    for (final item in items) {
+      if (item.id == id) {
+        return item;
+      }
+    }
+    return null;
+  }
+
+  Set<String> get equippedItemIds {
+    return equippedSlots.values.whereType<String>().toSet();
+  }
+
+  bool isEquipped(String itemId) {
+    return equippedItemIds.contains(itemId);
+  }
+
   Map<String, dynamic> toJson() => {
-        'currency': currency.toJson(),
-        'equippedSlots': equippedSlots,
-        'items': items.map((e) => e.toJson()).toList(),
-      };
+    'currency': currency.toJson(),
+    'equippedSlots': equippedSlots,
+    'items': items.map((e) => e.toJson()).toList(),
+  };
 }
