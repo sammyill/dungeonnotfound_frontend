@@ -99,32 +99,6 @@ class _DNDCharactersPanelState extends State<DNDCharactersPanel> {
     });
   }
 
-  Widget _buildHeroImage(HeroData hero) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: Image.asset(
-        hero.imageUrl,
-        width: double.infinity,
-        height: 220,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            width: double.infinity,
-            height: 220,
-            color: const Color.fromARGB(255, 20, 210, 128),
-            child: const Center(
-              child: Icon(
-                Icons.image_not_supported,
-                size: 40,
-                color: Colors.white54,
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
   Widget _buildHeroButtons({
     required double height,
     required double itemDiameter,
@@ -391,16 +365,16 @@ class HeroInventory extends StatelessWidget {
       width: double.infinity,
       height: 180,
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 92, 55, 10),
+        color: const Color.fromARGB(255, 27, 2, 24),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: const Color.fromARGB(255, 189, 88, 0),
+          color: const Color.fromARGB(180, 50, 0, 189),
           width: 1,
         ),
       ),
       child: const Center(
         child: Text(
-          'Inventory (placeholder)',
+          'Inventorywew (placeholder)',
           style: TextStyle(color: Colors.white70),
         ),
       ),
