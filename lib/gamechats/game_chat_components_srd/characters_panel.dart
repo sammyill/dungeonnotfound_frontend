@@ -2,31 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'characterstats.dart';
-import 'gamechatmodels.dart';
-import 'imgbuttoncomponent.dart';
+import 'character_stats.dart';
+import 'srd_models.dart';
+import "dnd_characters_panel_parts.dart";
 
-class HeroDataSRD {
-  final String id;
-  final String name;
-  final String imageUrl;
-  final String imagePortrait;
-  final String characterclass;
-  final Map<String, dynamic> stats;
-  final Map<String, dynamic> inventory;
-  final Map<String, dynamic> abilities;
 
-  const HeroDataSRD({
-    required this.id,
-    required this.name,
-    required this.imageUrl,
-    required this.imagePortrait,
-    required this.characterclass,
-    required this.stats,
-    required this.inventory,
-    required this.abilities,
-  });
-}
 enum HeroPanelTab { stats, inventory, abilities }
 
 class CharactersPanelSRD extends StatefulWidget {

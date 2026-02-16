@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'gamechatcomponentssrd/characterspanel.dart';
+import 'game_chat_components_srd/srd_models.dart';
+import 'game_chat_components_srd/characters_panel.dart';
 
 class GameChatPageSRD extends StatelessWidget {
   const GameChatPageSRD({super.key});

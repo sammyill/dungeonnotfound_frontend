@@ -1,6 +1,26 @@
 enum InventoryObjectType { onehand, twohand, armor, consumable, item, unknown }
 
+class HeroDataSRD {
+  final String id;
+  final String name;
+  final String imageUrl;
+  final String imagePortrait;
+  final String characterclass;
+  final Map<String, dynamic> stats;
+  final Map<String, dynamic> inventory;
+  final Map<String, dynamic> abilities;
 
+  const HeroDataSRD({
+    required this.id,
+    required this.name,
+    required this.imageUrl,
+    required this.imagePortrait,
+    required this.characterclass,
+    required this.stats,
+    required this.inventory,
+    required this.abilities,
+  });
+}
 
 
 extension InventoryObjectTypeParsing on InventoryObjectType {

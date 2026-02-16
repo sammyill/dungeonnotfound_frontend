@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:dungeonnotfound_frontend/gamechats/gamechatcomponentssrd/characterspanel.dart';
+import 'package:dungeonnotfound_frontend/gamechats/game_chat_components_srd/srd_models.dart';
+import 'package:dungeonnotfound_frontend/gamechats/game_chat_components_srd/characters_panel.dart';
 
 void main() {
   HeroDataSRD buildHero({
