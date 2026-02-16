@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:dungeonnotfound_frontend/gamechat/gamechatcomponents/gamechatmodels.dart';
+import 'package:dungeonnotfound_frontend/gamechats/gamechatcomponentssrd/gamechatmodels.dart';
 
 void main() {
   group('InventoryObjectTypeParsing', () {

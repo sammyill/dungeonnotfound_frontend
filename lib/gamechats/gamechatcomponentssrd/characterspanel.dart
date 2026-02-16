@@ -6,7 +6,7 @@ import 'characterstats.dart';
 import 'gamechatmodels.dart';
 import 'imgbuttoncomponent.dart';
 
-class HeroData {
+class HeroDataSRD {
   final String id;
   final String name;
   final String imageUrl;
@@ -16,7 +16,7 @@ class HeroData {
   final Map<String, dynamic> inventory;
   final Map<String, dynamic> abilities;
 
-  const HeroData({
+  const HeroDataSRD({
     required this.id,
     required this.name,
     required this.imageUrl,
@@ -27,15 +27,14 @@ class HeroData {
     required this.abilities,
   });
 }
-
 enum HeroPanelTab { stats, inventory, abilities }
 
-class DNDCharactersPanel extends StatefulWidget {
-  final HeroData hero;
+class CharactersPanelSRD extends StatefulWidget {
+  final HeroDataSRD hero;
   final List<String> heroIds;
-  final HeroData Function(String heroId) heroById;
+  final HeroDataSRD Function(String heroId) heroById;
 
-  const DNDCharactersPanel({
+  const CharactersPanelSRD({
     super.key,
     required this.hero,
     required this.heroIds,
@@ -43,10 +42,10 @@ class DNDCharactersPanel extends StatefulWidget {
   });
 
   @override
-  State<DNDCharactersPanel> createState() => _DNDCharactersPanelState();
+  State<CharactersPanelSRD> createState() => _CharactersPanelSRDState();
 }
 
-class _DNDCharactersPanelState extends State<DNDCharactersPanel> {
+class _CharactersPanelSRDState extends State<CharactersPanelSRD> {
   final ScrollController _headerScrollController = ScrollController();
   late String _selectedHeroId;
   HeroPanelTab _selectedTab = HeroPanelTab.stats;
@@ -64,7 +63,7 @@ class _DNDCharactersPanelState extends State<DNDCharactersPanel> {
   }
 
   @override
-  void didUpdateWidget(covariant DNDCharactersPanel oldWidget) {
+  void didUpdateWidget(covariant CharactersPanelSRD oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!widget.heroIds.contains(_selectedHeroId)) {
       _selectedHeroId = _resolveInitialSelectedId();
@@ -161,7 +160,7 @@ class _DNDCharactersPanelState extends State<DNDCharactersPanel> {
     );
   }
 
-  Widget _buildSelectedHeroPanel(HeroData hero) {
+  Widget _buildSelectedHeroPanel(HeroDataSRD hero) {
     return Stack(
       children: [
         Container(
@@ -221,7 +220,7 @@ class _DNDCharactersPanelState extends State<DNDCharactersPanel> {
     );
   }
 
-  Widget _buildPanelContent(HeroData hero) {
+  Widget _buildPanelContent(HeroDataSRD hero) {
     switch (_selectedTab) {
       case HeroPanelTab.stats:
         return HeroPanelsStats(hero: hero);
@@ -238,7 +237,7 @@ class _DNDCharactersPanelState extends State<DNDCharactersPanel> {
       return const SizedBox.shrink();
     }
 
-    final HeroData selectedHero = widget.heroById(_selectedHeroId);
+    final HeroDataSRD selectedHero = widget.heroById(_selectedHeroId);
 
     return SizedBox.expand(
       child: LayoutBuilder(
@@ -296,7 +295,7 @@ class _PanelIconButton extends StatelessWidget {
 }
 
 class HeroPanelsStats extends StatelessWidget {
-  final HeroData hero;
+  final HeroDataSRD hero;
 
   const HeroPanelsStats({super.key, required this.hero});
 
@@ -356,7 +355,7 @@ class _HeroImageFill extends StatelessWidget {
 }
 
 class HeroInventory extends StatelessWidget {
-  final HeroData hero;
+  final HeroDataSRD hero;
 
   const HeroInventory({super.key, required this.hero});
 
@@ -781,7 +780,7 @@ IconData _iconForType(InventoryObjectType objectType) {
 }
 
 class HeroAbilities extends StatelessWidget {
-  final HeroData hero;
+  final HeroDataSRD hero;
 
   const HeroAbilities({super.key, required this.hero});
 

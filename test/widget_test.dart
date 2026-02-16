@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:dungeonnotfound_frontend/gamechat/gamechatcomponents/characterspanel.dart';
+import 'package:dungeonnotfound_frontend/gamechats/gamechatcomponentssrd/characterspanel.dart';
 
 void main() {
-  HeroData buildHero({
+  HeroDataSRD buildHero({
     required String mainHandType,
     String? offHandEquippedId,
   }) {
-    return HeroData(
+    return HeroDataSRD(
       id: 'hero-1',
       name: 'Arden',
       imageUrl: 'assets/images/missing_fullbody.webp',
@@ -75,7 +75,7 @@ void main() {
 
   Future<void> pumpInventory(
     WidgetTester tester, {
-    required HeroData hero,
+    required HeroDataSRD hero,
     double width = 420,
     double height = 520,
   }) async {

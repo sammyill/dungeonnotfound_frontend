@@ -1,5 +1,8 @@
 enum InventoryObjectType { onehand, twohand, armor, consumable, item, unknown }
 
+
+
+
 extension InventoryObjectTypeParsing on InventoryObjectType {
   static InventoryObjectType fromString(String? value) {
     final normalized = (value ?? '').trim().toLowerCase();

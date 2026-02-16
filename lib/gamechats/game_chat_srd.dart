@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'gamechatcomponents/characterspanel.dart';
+import 'gamechatcomponentssrd/characterspanel.dart';
 
-class GameChatPage extends StatelessWidget {
-  const GameChatPage({super.key});
+class GameChatPageSRD extends StatelessWidget {
+  const GameChatPageSRD({super.key});
 
-  static const List<HeroData> _heroes = [
-    HeroData(
+  static const List<HeroDataSRD> _heroes = [
+    HeroDataSRD(
       id: 'option1',
       name: 'Arden',
       imageUrl: 'assets/images/paladinfullbody.webp',
@@ -90,7 +90,7 @@ class GameChatPage extends StatelessWidget {
         'skills': ['Slash', 'Shield Bash'],
       },
     ),
-    HeroData(
+    HeroDataSRD(
       id: 'option2',
       name: 'Lyra',
       imageUrl: 'assets/images/clericfullbody.webp',
@@ -174,7 +174,7 @@ class GameChatPage extends StatelessWidget {
         'skills': ['Backstab', 'Vanish'],
       },
     ),
-    HeroData(
+    HeroDataSRD(
       id: 'option3',
       name: 'Torin',
       imageUrl: 'assets/images/thieffullbody.webp',
@@ -256,7 +256,7 @@ class GameChatPage extends StatelessWidget {
         'skills': ['Taunt', 'Fortify'],
       },
     ),
-    HeroData(
+    HeroDataSRD(
       id: 'option4',
       name: 'Nia',
       imageUrl: 'assets/images/wizardfullbody.webp',
@@ -335,12 +335,12 @@ class GameChatPage extends StatelessWidget {
   ];
 
   static final List<String> _heroIds = _heroes
-      .map((HeroData hero) => hero.id)
+      .map((HeroDataSRD hero) => hero.id)
       .toList(growable: false);
 
-  static HeroData _heroById(String heroId) {
+  static HeroDataSRD _heroById(String heroId) {
     return _heroes.firstWhere(
-      (HeroData hero) => hero.id == heroId,
+      (HeroDataSRD hero) => hero.id == heroId,
       orElse: () => _heroes.first,
     );
   }
@@ -386,7 +386,7 @@ class GameChatPage extends StatelessWidget {
                 const SizedBox(width: 16),
                 Expanded(
                   flex: 1,
-                  child: DNDCharactersPanel(
+                  child: CharactersPanelSRD(
                     hero: _heroes.first,
                     heroIds: _heroIds,
                     heroById: _heroById,
