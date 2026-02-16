@@ -195,7 +195,7 @@ class GameChatPageSRD extends StatelessWidget {
         'currency': {'gp': 95, 'sp': 22, 'cp': 40},
         'equippedSlots': {
           'mainHand': 'itm_torin_dagger_01',
-          'offHand': null,
+          'offHand': "itm_torin_dagger_02",
           'armor': 'itm_torin_leather_01',
         },
         'items': [
@@ -203,7 +203,16 @@ class GameChatPageSRD extends StatelessWidget {
             'id': 'itm_torin_dagger_01',
             'name': 'Dagger',
             'image': 'assets/items/dagger.png',
-            'quantity': 2,
+            'quantity': 1,
+            "objectType":"onehand",
+            'description':
+                'Weapon (simple, finesse, light). +6 to hit. Damage: 1d4+4 piercing. Can be thrown (20/60).',
+          },
+          {
+            'id': 'itm_torin_dagger_02',
+            'name': 'Dagger',
+            'image': 'assets/items/dagger.png',
+            'quantity': 1,
             "objectType":"onehand",
             'description':
                 'Weapon (simple, finesse, light). +6 to hit. Damage: 1d4+4 piercing. Can be thrown (20/60).',
