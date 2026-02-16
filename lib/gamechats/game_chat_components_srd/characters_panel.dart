@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'character_stats.dart';
+import 'hero_panel_stats.dart';
 import 'srd_models.dart';
 import "dnd_characters_panel_parts.dart";
 
@@ -274,65 +274,6 @@ class _PanelIconButton extends StatelessWidget {
   }
 }
 
-class HeroPanelsStats extends StatelessWidget {
-  final HeroDataSRD hero;
-
-  const HeroPanelsStats({super.key, required this.hero});
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final double statsHeight = constraints.maxHeight * 0.30;
-
-        return Stack(
-          fit: StackFit.expand,
-          children: [
-            _HeroImageFill(imagePath: hero.imageUrl),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              height: statsHeight,
-              child: Center(child: CharacterStats(stats: hero.stats)),
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _HeroImageFill extends StatelessWidget {
-  final String imagePath;
-
-  const _HeroImageFill({required this.imagePath});
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: Image.asset(
-        imagePath,
-        width: double.infinity,
-        height: double.infinity,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            color: const Color.fromARGB(255, 20, 210, 128),
-            child: const Center(
-              child: Icon(
-                Icons.image_not_supported,
-                size: 40,
-                color: Colors.white54,
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
 
 class HeroInventory extends StatelessWidget {
   final HeroDataSRD hero;
