@@ -5,7 +5,7 @@ class HeroDataSRD {
   final String name;
   final String imageUrl;
   final String imagePortrait;
-  final String characterclass;
+  final String characterClass;
   final Map<String, dynamic> stats;
   final Map<String, dynamic> inventory;
   final Map<String, dynamic> abilities;
@@ -15,7 +15,7 @@ class HeroDataSRD {
     required this.name,
     required this.imageUrl,
     required this.imagePortrait,
-    required this.characterclass,
+    required this.characterClass,
     required this.stats,
     required this.inventory,
     required this.abilities,
