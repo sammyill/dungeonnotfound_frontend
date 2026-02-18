@@ -225,7 +225,6 @@ class _CharactersPanelSRDState extends State<CharactersPanelSRD> {
         builder: (context, constraints) {
           final buttonsHeight = constraints.maxHeight * 0.20;
           final itemDiameter = buttonsHeight * 0.72;
-
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -298,6 +297,37 @@ class HeroAbilities extends StatelessWidget {
           'Abilities (placeholder)',
           style: TextStyle(color: Colors.white70),
         ),
+      ),
+    );
+  }
+}
+
+class ImageBackGroundFill extends StatelessWidget {
+  final String imagePath;
+
+  const ImageBackGroundFill({super.key,required this.imagePath});
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: Image.asset(
+        imagePath,
+        width: double.infinity,
+        height: double.infinity,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: const Color.fromARGB(255, 20, 210, 128),
+            child: const Center(
+              child: Icon(
+                Icons.image_not_supported,
+                size: 40,
+                color: Colors.white54,
+              ),
+            ),
+          );
+        },
       ),
     );
   }

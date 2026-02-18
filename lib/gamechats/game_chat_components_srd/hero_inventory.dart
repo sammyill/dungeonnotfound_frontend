@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'srd_models.dart';
 
+const Color inventoryBackGroundColor=Color.fromARGB(255, 160, 120, 70);
+const Color inventoryTextColor=Colors.white;
+
 class HeroInventory extends StatelessWidget {
   final HeroDataSRD hero;
 
@@ -60,12 +63,8 @@ class InventoryMoneyBar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 92, 55, 10),
+        color: inventoryBackGroundColor,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: const Color.fromARGB(255, 189, 88, 0),
-          width: 1.5,
-        ),
       ),
       child: Row(
         children: [
@@ -84,6 +83,28 @@ class InventoryMoneyBar extends StatelessWidget {
           const SizedBox(width: 6),
           CurrencyChip(label: 'CP', value: currency.cp),
         ],
+      ),
+    );
+  }
+}
+
+class CurrencyChip extends StatelessWidget {
+  final String label;
+  final int value;
+
+  const CurrencyChip({super.key,required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: Text(
+        '$label $value',
+        style: const TextStyle(
+          color: inventoryTextColor,
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }
@@ -110,7 +131,7 @@ class EquippedSlotsRow extends StatelessWidget {
         Expanded(
           child: EquippedSlotCard(slotLabel: 'Main Hand', item: mainHandItem),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: 4),
         Expanded(
           child: EquippedSlotCard(
             slotLabel: 'Off Hand',
@@ -118,61 +139,11 @@ class EquippedSlotsRow extends StatelessWidget {
             blockedByTwoHand: offHandBlocked,
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: 4),
         Expanded(
           child: EquippedSlotCard(slotLabel: 'Armor', item: armorItem),
         ),
       ],
-    );
-  }
-}
-
-class InventoryItemsList extends StatelessWidget {
-  final InventoryData inventory;
-
-  const InventoryItemsList({super.key,required this.inventory});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 68, 34, 0),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: const Color.fromARGB(255, 189, 88, 0),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(10, 8, 10, 6),
-            child: Text(
-              'Items',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          const Divider(height: 1, color: Color.fromARGB(120, 189, 88, 0)),
-          Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.all(8),
-              itemCount: inventory.items.length,
-              separatorBuilder: (_, index) => const SizedBox(height: 6),
-              itemBuilder: (context, index) {
-                final item = inventory.items[index];
-                return InventoryItemTile(
-                  item: item,
-                  isEquipped: inventory.isEquipped(item.id),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -199,32 +170,27 @@ class EquippedSlotCard extends StatelessWidget {
         : 'Empty';
 
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 85, 47, 8),
+        color: inventoryBackGroundColor,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: const Color.fromARGB(255, 189, 88, 0),
-          width: 1,
-        ),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            slotLabel,
+          Expanded(
+            flex: 1,
+            child: Text(
+            "$slotLabel: $title",
             style: const TextStyle(
               color: Colors.white70,
               fontSize: 11,
               fontWeight: FontWeight.w600,
             ),
-          ),
-          const SizedBox(height: 6),
+          ),),
           Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ItemThumb(
+            flex:2,
+            child: EquippedItemImage(
                   imagePath: item?.image,
                   fallbackIcon: blockedByTwoHand
                       ? Icons.block
@@ -232,36 +198,81 @@ class EquippedSlotCard extends StatelessWidget {
                       ? Icons.crop_square
                       : iconForType(item!.objectType),
                 ),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                    title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: blockedByTwoHand
-                          ? Colors.orange.shade200
-                          : Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ),
-          if (blockedByTwoHand)
-            const Text(
-              'Two-Handed',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: Colors.white70, fontSize: 10),
-            ),
         ],
       ),
     );
   }
 }
+
+
+class EquippedItemImage extends StatelessWidget {
+  final String? imagePath;
+  final IconData fallbackIcon;
+
+  const EquippedItemImage({super.key,required this.imagePath, required this.fallbackIcon});
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      child: SizedBox(
+        width:50,
+        height: 50,
+        child: imagePath == null
+            ? Icon(fallbackIcon, size: 18, color: Colors.white70)
+            : Image.asset(
+                imagePath!,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Icon(fallbackIcon, size: 18, color: Colors.white70);
+                },
+              ),
+      ),
+    );
+  }
+}
+
+
+class InventoryItemsList extends StatelessWidget {
+  final InventoryData inventory;
+
+  const InventoryItemsList({super.key,required this.inventory});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Padding(
+            padding: EdgeInsets.fromLTRB(10, 8, 10, 6),
+            child: Text(
+              'Items',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          const Divider(height: 1, color: Color.fromARGB(120, 189, 88, 0)),
+          Expanded(
+            child: ListView.separated(
+              padding: const EdgeInsets.all(3),
+              itemCount: inventory.items.length,
+              separatorBuilder: (_, index) => const SizedBox(height: 6),
+              itemBuilder: (context, index) {
+                final item = inventory.items[index];
+                return InventoryItemTile(
+                  item: item,
+                  isEquipped: inventory.isEquipped(item.id),
+                );
+              },
+            ),
+          ),
+        ],
+      );
+  }
+}
+
 
 class InventoryItemTile extends StatelessWidget {
   final InventoryItemData item;
@@ -274,12 +285,7 @@ class InventoryItemTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 92, 55, 10),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: const Color.fromARGB(255, 189, 88, 0),
-          width: 1,
-        ),
+        color: inventoryBackGroundColor,
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -301,7 +307,7 @@ class InventoryItemTile extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: inventoryTextColor,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -363,10 +369,9 @@ class ItemThumb extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(6),
-      child: Container(
-        width: 34,
-        height: 34,
-        color: const Color.fromARGB(255, 44, 24, 5),
+      child: SizedBox(
+        width: 30,
+        height: 30,
         child: imagePath == null
             ? Icon(fallbackIcon, size: 18, color: Colors.white70)
             : Image.asset(
@@ -399,32 +404,3 @@ IconData iconForType(InventoryObjectType objectType) {
 }
 
 
-class CurrencyChip extends StatelessWidget {
-  final String label;
-  final int value;
-
-  const CurrencyChip({super.key,required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 68, 34, 0),
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(
-          color: const Color.fromARGB(255, 189, 88, 0),
-          width: 1,
-        ),
-      ),
-      child: Text(
-        '$label $value',
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
-}
