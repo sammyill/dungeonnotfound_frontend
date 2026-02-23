@@ -174,3 +174,118 @@ class InventoryData {
     'items': items.map((e) => e.toJson()).toList(),
   };
 }
+
+
+enum AbilityKind {
+  attack,
+  heal,
+  utility,
+  passive;
+
+  static const Map<String, AbilityKind> _map = {
+    'attack': AbilityKind.attack,
+    'heal': AbilityKind.heal,
+    'utility': AbilityKind.utility,
+    'passive': AbilityKind.passive,
+  };
+
+  static AbilityKind fromString(String? value) {
+    return _map[value?.toLowerCase()] ?? AbilityKind.utility;
+  }
+}
+
+enum AbilityActionCost {
+  action,
+  bonusAction,
+  reaction,
+  passive;
+
+  static const Map<String, AbilityActionCost> _map = {
+    'action': AbilityActionCost.action,
+    'bonusAction': AbilityActionCost.bonusAction,
+    'reaction': AbilityActionCost.reaction,
+    'passive': AbilityActionCost.passive,
+  };
+
+  static AbilityActionCost fromString(String? value) {
+    return _map[value?.toLowerCase()] ?? AbilityActionCost.action;
+  }
+
+
+}
+
+/*
+class AbilityDataSRD {
+
+
+;
+
+
+  /// Small UI/gameplay helpers (optional but useful)
+
+  final AbilityActionCost actionCost;
+  final int rangeFeet; // 5 = melee
+  final bool magical;
+
+  const AbilityDataSRD({
+    required this.id,
+    required this.name,
+    required this.image,
+    required this.description,
+    this.kind = AbilityKind.utility,
+    this.actionCost = AbilityActionCost.action,
+    this.rangeFeet = 5,
+    this.magical = false,
+  });
+}
+*/
+
+
+class AbilityDataSRD {
+  final String id;
+  final String name;
+  final String image;
+  final String description;
+  final int range;
+  final bool magical;
+  final AbilityKind kind;
+  final AbilityActionCost actionCost;
+  
+
+  const AbilityDataSRD({
+    required this.id,
+    required this.name,
+    required this.image,
+    required this.description,
+    this.range=0,
+    this.magical = false,
+    required this.kind,
+    this.actionCost = AbilityActionCost.action,
+  });
+
+  factory AbilityDataSRD.fromMap(Map<String, dynamic> map) {
+    return AbilityDataSRD(
+      id: map['id'] ?? '',
+      name: map['name'] ?? '',
+      image: map['image'] ?? '',
+      description: map['description'] ?? '',
+      range:map["range"] ?? 0,
+      magical:map["magical"] ?? false,
+      kind: AbilityKind.fromString(map['kind']),
+      actionCost: AbilityActionCost.fromString(map["actionCost"]),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'image': image,
+      'description': description,
+      'range':range,
+      'magical':magical,
+      'kind': kind.name, // sends "attack", "heal", etc.
+      'actionCost':actionCost.name,
+    };
+  }
+}
