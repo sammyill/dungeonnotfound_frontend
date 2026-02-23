@@ -6,6 +6,7 @@ import 'hero_panel_stats.dart';
 import 'srd_models.dart';
 import "characters_panel_parts.dart";
 import "hero_inventory.dart";
+import 'hero_ability.dart';
 
 enum HeroPanelTab { stats, inventory, abilities }
 
@@ -139,7 +140,7 @@ class _CharactersPanelSRDState extends State<CharactersPanelSRD> {
         Container(
           width: double.infinity,
           padding: const EdgeInsets.all(16),
-         
+
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,28 +216,26 @@ class _CharactersPanelSRDState extends State<CharactersPanelSRD> {
             fit: StackFit.expand,
             children: [
               const ImageBackGroundFill(),
-             
-               
-                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildHeroButtons(
-                      height: buttonsHeight,
-                      itemDiameter: itemDiameter,
+
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHeroButtons(
+                    height: buttonsHeight,
+                    itemDiameter: itemDiameter,
+                  ),
+                  SizedBox(
+                    height: 16,
+                    width: double.infinity,
+                    child: SvgPicture.asset(
+                      "assets/icons/charcterpaneldivider.svg",
+                      fit: BoxFit.fitWidth,
                     ),
-                    SizedBox(
-                      height: 16,
-                      width: double.infinity,
-                      child: SvgPicture.asset(
-                        "assets/icons/charcterpaneldivider.svg",
-                        fit: BoxFit.fitWidth,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Expanded(child: _buildSelectedHeroPanel(selectedHero)),
-                  ],
-                ),
-              
+                  ),
+                  const SizedBox(height: 6),
+                  Expanded(child: _buildSelectedHeroPanel(selectedHero)),
+                ],
+              ),
             ],
           );
         },
@@ -272,34 +271,6 @@ class _PanelIconButton extends StatelessWidget {
           border: Border.all(color: borderColor, width: 2),
         ),
         child: SvgPicture.asset(assetPath, fit: BoxFit.contain),
-      ),
-    );
-  }
-}
-
-class HeroAbilities extends StatelessWidget {
-  final HeroDataSRD hero;
-
-  const HeroAbilities({super.key, required this.hero});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 180,
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 92, 55, 10),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: const Color.fromARGB(255, 189, 88, 0),
-          width: 1,
-        ),
-      ),
-      child: const Center(
-        child: Text(
-          'Abilities (placeholder)',
-          style: TextStyle(color: Colors.white70),
-        ),
       ),
     );
   }

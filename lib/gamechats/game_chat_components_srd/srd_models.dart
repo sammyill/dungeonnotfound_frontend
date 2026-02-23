@@ -22,6 +22,28 @@ class HeroDataSRD {
   });
 }
 
+extension HeroDataSRDAbilities on HeroDataSRD {
+  List<AbilityDataSRD> get abilityList {
+    final rawAbilities = abilities['abilities'];
+    if (rawAbilities is! List) {
+      return const <AbilityDataSRD>[];
+    }
+
+    final parsedAbilities = <AbilityDataSRD>[];
+    for (final dynamic rawAbility in rawAbilities) {
+      if (rawAbility is Map<String, dynamic>) {
+        parsedAbilities.add(AbilityDataSRD.fromMap(rawAbility));
+        continue;
+      }
+      if (rawAbility is Map) {
+        parsedAbilities.add(
+          AbilityDataSRD.fromMap(Map<String, dynamic>.from(rawAbility)),
+        );
+      }
+    }
+    return parsedAbilities;
+  }
+}
 
 extension InventoryObjectTypeParsing on InventoryObjectType {
   static InventoryObjectType fromString(String? value) {
@@ -175,7 +197,6 @@ class InventoryData {
   };
 }
 
-
 enum AbilityKind {
   attack,
   heal,
@@ -190,7 +211,12 @@ enum AbilityKind {
   };
 
   static AbilityKind fromString(String? value) {
-    return _map[value?.toLowerCase()] ?? AbilityKind.utility;
+    final normalized = (value ?? '')
+        .trim()
+        .toLowerCase()
+        .replaceAll('_', '')
+        .replaceAll(' ', '');
+    return _map[normalized] ?? AbilityKind.utility;
   }
 }
 
@@ -202,16 +228,19 @@ enum AbilityActionCost {
 
   static const Map<String, AbilityActionCost> _map = {
     'action': AbilityActionCost.action,
-    'bonusAction': AbilityActionCost.bonusAction,
+    'bonusaction': AbilityActionCost.bonusAction,
     'reaction': AbilityActionCost.reaction,
     'passive': AbilityActionCost.passive,
   };
 
   static AbilityActionCost fromString(String? value) {
-    return _map[value?.toLowerCase()] ?? AbilityActionCost.action;
+    final normalized = (value ?? '')
+        .trim()
+        .toLowerCase()
+        .replaceAll('_', '')
+        .replaceAll(' ', '');
+    return _map[normalized] ?? AbilityActionCost.action;
   }
-
-
 }
 
 class AbilityDataSRD {
@@ -223,29 +252,70 @@ class AbilityDataSRD {
   final bool magical;
   final AbilityKind kind;
   final AbilityActionCost actionCost;
-  
 
   const AbilityDataSRD({
     required this.id,
     required this.name,
     required this.image,
     required this.description,
-    this.range=0,
+    this.range = 0,
     this.magical = false,
     required this.kind,
     this.actionCost = AbilityActionCost.action,
   });
 
   factory AbilityDataSRD.fromMap(Map<String, dynamic> map) {
+    String readString(dynamic value) {
+      if (value == null) {
+        return '';
+      }
+      if (value is String) {
+        return value;
+      }
+      return value.toString();
+    }
+
+    int readInt(dynamic value, {int fallback = 0}) {
+      if (value is int) {
+        return value;
+      }
+      if (value is num) {
+        return value.toInt();
+      }
+      if (value is String) {
+        return int.tryParse(value) ?? fallback;
+      }
+      return fallback;
+    }
+
+    bool readBool(dynamic value, {bool fallback = false}) {
+      if (value is bool) {
+        return value;
+      }
+      if (value is num) {
+        return value != 0;
+      }
+      if (value is String) {
+        final normalized = value.trim().toLowerCase();
+        if (normalized == 'true' || normalized == '1' || normalized == 'yes') {
+          return true;
+        }
+        if (normalized == 'false' || normalized == '0' || normalized == 'no') {
+          return false;
+        }
+      }
+      return fallback;
+    }
+
     return AbilityDataSRD(
-      id: map['id'] ?? '',
-      name: map['name'] ?? '',
-      image: map['image'] ?? '',
-      description: map['description'] ?? '',
-      range:map["range"] ?? 0,
-      magical:map["magical"] ?? false,
-      kind: AbilityKind.fromString(map['kind']),
-      actionCost: AbilityActionCost.fromString(map["actionCost"]),
+      id: readString(map['id']),
+      name: readString(map['name']),
+      image: readString(map['image']),
+      description: readString(map['description']),
+      range: readInt(map["range"]),
+      magical: readBool(map["magical"]),
+      kind: AbilityKind.fromString(readString(map['kind'])),
+      actionCost: AbilityActionCost.fromString(readString(map["actionCost"])),
     );
   }
 
@@ -255,10 +325,10 @@ class AbilityDataSRD {
       'name': name,
       'image': image,
       'description': description,
-      'range':range,
-      'magical':magical,
+      'range': range,
+      'magical': magical,
       'kind': kind.name, // sends "attack", "heal", etc.
-      'actionCost':actionCost.name,
+      'actionCost': actionCost.name,
     };
   }
 }
