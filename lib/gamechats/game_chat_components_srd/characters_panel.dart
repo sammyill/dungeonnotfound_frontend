@@ -7,7 +7,6 @@ import 'srd_models.dart';
 import "characters_panel_parts.dart";
 import "hero_inventory.dart";
 
-
 enum HeroPanelTab { stats, inventory, abilities }
 
 class CharactersPanelSRD extends StatefulWidget {
@@ -90,13 +89,6 @@ class _CharactersPanelSRDState extends State<CharactersPanelSRD> {
       width: double.infinity,
       height: height,
       child: Container(
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 121, 57, 0),
-          border: Border.all(
-            color: const Color.fromARGB(255, 189, 88, 0),
-            width: 2,
-          ),
-        ),
         padding: const EdgeInsets.all(8),
         child: ScrollConfiguration(
           behavior: const MaterialScrollBehavior().copyWith(
@@ -147,14 +139,7 @@ class _CharactersPanelSRDState extends State<CharactersPanelSRD> {
         Container(
           width: double.infinity,
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 68, 34, 0),
-            border: Border.all(
-              color: const Color.fromARGB(255, 189, 88, 0),
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(12),
-          ),
+         
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -225,15 +210,33 @@ class _CharactersPanelSRDState extends State<CharactersPanelSRD> {
         builder: (context, constraints) {
           final buttonsHeight = constraints.maxHeight * 0.20;
           final itemDiameter = buttonsHeight * 0.72;
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+
+          return Stack(
+            fit: StackFit.expand,
             children: [
-              _buildHeroButtons(
-                height: buttonsHeight,
-                itemDiameter: itemDiameter,
-              ),
-              const SizedBox(height: 16),
-              Expanded(child: _buildSelectedHeroPanel(selectedHero)),
+              const ImageBackGroundFill(),
+             
+               
+                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildHeroButtons(
+                      height: buttonsHeight,
+                      itemDiameter: itemDiameter,
+                    ),
+                    SizedBox(
+                      height: 16,
+                      width: double.infinity,
+                      child: SvgPicture.asset(
+                        "assets/icons/charcterpaneldivider.svg",
+                        fit: BoxFit.fitWidth,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Expanded(child: _buildSelectedHeroPanel(selectedHero)),
+                  ],
+                ),
+              
             ],
           );
         },
@@ -303,30 +306,19 @@ class HeroAbilities extends StatelessWidget {
 }
 
 class ImageBackGroundFill extends StatelessWidget {
-  final String imagePath;
-
-  const ImageBackGroundFill({super.key,required this.imagePath});
+  const ImageBackGroundFill({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(12),
       child: Image.asset(
-        imagePath,
+        "assets/images/characterpanelbackground.png",
         width: double.infinity,
         height: double.infinity,
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) {
-          return Container(
-            color: const Color.fromARGB(255, 20, 210, 128),
-            child: const Center(
-              child: Icon(
-                Icons.image_not_supported,
-                size: 40,
-                color: Colors.white54,
-              ),
-            ),
-          );
+          return Container(color: Color.fromARGB(255, 102, 58, 4));
         },
       ),
     );

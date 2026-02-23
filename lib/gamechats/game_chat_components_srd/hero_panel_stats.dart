@@ -68,7 +68,7 @@ class CharacterStats extends StatelessWidget {
   const CharacterStats({super.key, required this.stats});
 
   static const List<_StatField> _charstats = [
-    _StatField('Strength', '1', 'assets/icons/strength.svg'),
+    _StatField('Strength', 'strength', 'assets/icons/strength.svg'),
     _StatField('Dexterity', 'dexterity', 'assets/icons/dexterity.svg'),
     _StatField('Constitution', 'constitution', 'assets/icons/constitution.svg'),
     _StatField('Intelligence', 'intelligence', 'assets/icons/intelligence.svg'),
