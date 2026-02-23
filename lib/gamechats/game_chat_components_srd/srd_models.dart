@@ -214,33 +214,6 @@ enum AbilityActionCost {
 
 }
 
-/*
-class AbilityDataSRD {
-
-
-;
-
-
-  /// Small UI/gameplay helpers (optional but useful)
-
-  final AbilityActionCost actionCost;
-  final int rangeFeet; // 5 = melee
-  final bool magical;
-
-  const AbilityDataSRD({
-    required this.id,
-    required this.name,
-    required this.image,
-    required this.description,
-    this.kind = AbilityKind.utility,
-    this.actionCost = AbilityActionCost.action,
-    this.rangeFeet = 5,
-    this.magical = false,
-  });
-}
-*/
-
-
 class AbilityDataSRD {
   final String id;
   final String name;
