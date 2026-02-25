@@ -22,6 +22,70 @@ class HeroDataSRD {
   });
 }
 
+class HeroStatsSRD{
+  final int hp;
+  final int currentHp;
+  final int level;
+  final int strength;
+  final int dexterity;
+  final int constitution;
+  final int intelligence;
+  final int wisdom;
+  final int charisma;
+
+  const HeroStatsSRD({
+    required this.hp,
+    required this.currentHp,
+    required this.level,
+    required this.strength,
+    required this.dexterity,
+    required this.constitution,
+    required this.intelligence,
+    required this.wisdom,
+    required this.charisma,
+  });
+
+  factory HeroStatsSRD.fromJson(Map<String, dynamic> json) {
+    return HeroStatsSRD(
+      hp: (json['hpbaseline'] ?? 0) as int,
+      currentHp: (json['hpcurrent'] ?? 0) as int,
+      level: (json['level'] ?? 1) as int,
+      strength: (json['strength'] ?? 10) as int,
+      dexterity: (json['dexterity'] ?? 10) as int,
+      constitution: (json['constitution'] ?? 10) as int,
+      intelligence: (json['intelligence'] ?? 10) as int,
+      wisdom: (json['wisdom'] ?? 10) as int,
+      charisma: (json['charisma'] ?? 10) as int,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'hpbaseline': hp,
+    'hpcurrent': currentHp,
+    'level': level,
+    'strength': strength,
+    'dexterity': dexterity,
+    'constitution': constitution,
+    'intelligence': intelligence,
+    'wisdom': wisdom,
+    'charisma': charisma,
+  };
+
+}
+
+/* 
+ stats: {
+        'hpbaseline': 180,
+        'hpcurrent': 165,
+        'level': 7,
+        'strength': 18,
+        'dexterity': 9,
+        'constitution': 17,
+        'intelligence': 8,
+        'wisdom': 10,
+        'charisma': 7,
+      },*/
+
 extension HeroDataSRDAbilities on HeroDataSRD {
   List<AbilityDataSRD> get abilityList {
     final rawAbilities = abilities['abilities'];
