@@ -73,18 +73,7 @@ class HeroStatsSRD{
 
 }
 
-/* 
- stats: {
-        'hpbaseline': 180,
-        'hpcurrent': 165,
-        'level': 7,
-        'strength': 18,
-        'dexterity': 9,
-        'constitution': 17,
-        'intelligence': 8,
-        'wisdom': 10,
-        'charisma': 7,
-      },*/
+
 
 extension HeroDataSRDAbilities on HeroDataSRD {
   List<AbilityDataSRD> get abilityList {
