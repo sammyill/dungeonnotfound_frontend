@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'game_chat_components_srd/srd_models.dart';
 import 'game_chat_components_srd/characters_panel.dart';
+import 'game_chat_components_srd/party_chat.dart';
+import 'game_chat_components_srd/srd_chat_models.dart';
+import 'game_chat_components_srd/srd_hero_models.dart';
 
 class GameChatPageSRD extends StatelessWidget {
   const GameChatPageSRD({super.key});
@@ -483,6 +485,60 @@ class GameChatPageSRD extends StatelessWidget {
       .map((heroJson) => HeroDataSRD.fromJson(heroJson))
       .toList(growable: false);
 
+  static const List<Map<String, dynamic>> _chatInteractionsJson = [
+    {
+      'message_id': 'msg_001',
+      'type': 'free_message',
+      'owner_id': 'dm_llm',
+      'owner_label': 'DM',
+      'message_text':
+          'The cavern opens before you. Your torchlight catches ancient carvings on the wall.',
+    },
+    {
+      'message_id': 'msg_002',
+      'type': 'dm_level_up',
+      'owner_id': 'dm_llm',
+      'owner_label': 'DM',
+      'message_text':
+          'Lyra has gained enough experience to level up. Assign your improvements before continuing.',
+    },
+    {
+      'message_id': 'msg_003',
+      'type': 'player_level_up',
+      'owner_id': 'option2',
+      'owner_label': 'Lyra',
+      'strength': 11,
+      'dexterity': 18,
+      'constitution': 12,
+      'intelligence': 14,
+      'wisdom': 13,
+      'charisma': 14,
+    },
+    {
+      'message_id': 'msg_004',
+      'type': 'dm_action',
+      'owner_id': 'dm_llm',
+      'owner_label': 'DM',
+      'message_text':
+          'Torin, make a stealth check while approaching the sentry.',
+      'action_target': 'option3',
+    },
+    {
+      'message_id': 'msg_005',
+      'type': 'player_action',
+      'owner_id': 'option3',
+      'owner_label': 'Torin',
+      'message_text':
+          'I slip into the shadows and move behind the broken pillar.',
+      'roll': 17,
+    },
+  ];
+
+  static final List<PartyChatInteraction> _chatInteractions =
+      _chatInteractionsJson
+          .map(PartyChatInteraction.fromJson)
+          .toList(growable: false);
+
   static final List<String> _heroIds = _heroes
       .map((HeroDataSRD hero) => hero.id)
       .toList(growable: false);
@@ -491,29 +547,6 @@ class GameChatPageSRD extends StatelessWidget {
     return _heroes.firstWhere(
       (HeroDataSRD hero) => hero.id == heroId,
       orElse: () => _heroes.first,
-    );
-  }
-
-  Widget _buildGameChatPlaceholder() {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 28, 20, 12),
-        border: Border.all(
-          color: const Color.fromARGB(255, 189, 88, 0),
-          width: 2,
-        ),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: const Center(
-        child: Text(
-          'Game Chat Placeholder',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 22,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
     );
   }
 
@@ -531,7 +564,13 @@ class GameChatPageSRD extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(flex: 2, child: _buildGameChatPlaceholder()),
+                Expanded(
+                  flex: 2,
+                  child: PartyChat(
+                    interactions: _chatInteractions,
+                    heroes: _heroes,
+                  ),
+                ),
                 const SizedBox(width: 16),
                 Expanded(
                   flex: 1,

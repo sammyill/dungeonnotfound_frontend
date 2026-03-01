@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'srd_models.dart';
+import 'srd_hero_models.dart';
 
 const Color _abilityCardColor = Color.fromARGB(255, 120, 74, 18);
 const Color _abilityTagColor = Color.fromARGB(255, 68, 34, 0);

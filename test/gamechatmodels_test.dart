@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:dungeonnotfound_frontend/gamechats/game_chat_components_srd/srd_models.dart';
+import 'package:dungeonnotfound_frontend/gamechats/game_chat_components_srd/srd_chat_models.dart';
+import 'package:dungeonnotfound_frontend/gamechats/game_chat_components_srd/srd_hero_models.dart';
 
 void main() {
   group('InventoryObjectTypeParsing', () {
@@ -223,6 +224,158 @@ void main() {
       expect(statsJson['currentHp'], 120);
       expect(inventoryJson['currency'], isA<Map<String, dynamic>>());
       expect(abilitiesJson['abilities'], isA<List<dynamic>>());
+    });
+  });
+
+  group('PartyChatInteraction parse/serialize by type', () {
+    final payloads = <Map<String, dynamic>>[
+      {
+        'message_id': 'msg_001',
+        'type': 'free_message',
+        'owner_id': 'dm_llm',
+        'owner_label': 'DM',
+        'message_text': 'Narration',
+      },
+      {
+        'message_id': 'msg_002',
+        'type': 'dm_level_up',
+        'owner_id': 'dm_llm',
+        'owner_label': 'DM',
+        'message_text': 'Level up now',
+      },
+      {
+        'message_id': 'msg_003',
+        'type': 'player_level_up',
+        'owner_id': 'option2',
+        'owner_label': 'Lyra',
+        'strength': 11,
+        'dexterity': 12,
+        'constitution': 13,
+        'intelligence': 14,
+        'wisdom': 15,
+        'charisma': 16,
+      },
+      {
+        'message_id': 'msg_004',
+        'type': 'dm_action',
+        'owner_id': 'dm_llm',
+        'owner_label': 'DM',
+        'message_text': 'Torin, roll stealth',
+        'action_target': 'option3',
+      },
+      {
+        'message_id': 'msg_005',
+        'type': 'player_action',
+        'owner_id': 'option3',
+        'owner_label': 'Torin',
+        'message_text': 'I hide behind a pillar',
+        'roll': 18,
+      },
+    ];
+
+    for (final payload in payloads) {
+      test('round-trips ${payload['type']}', () {
+        final interaction = PartyChatInteraction.fromJson(payload);
+        final json = interaction.toJson();
+        expect(json['message_id'], payload['message_id']);
+        expect(json['type'], payload['type']);
+        expect(json['owner_id'], payload['owner_id']);
+        expect(json['owner_label'], payload['owner_label']);
+      });
+    }
+  });
+
+  group('PartyChatInteraction list and validation', () {
+    test('parses mixed list preserving order', () {
+      final raw = <Map<String, dynamic>>[
+        {
+          'message_id': 'm1',
+          'type': 'free_message',
+          'owner_id': 'dm_llm',
+          'owner_label': 'DM',
+          'message_text': 'start',
+        },
+        {
+          'message_id': 'm2',
+          'type': 'player_action',
+          'owner_id': 'option1',
+          'owner_label': 'Arden',
+          'message_text': 'I attack',
+          'roll': 12,
+        },
+      ];
+
+      final parsed = raw.map(PartyChatInteraction.fromJson).toList();
+      expect(parsed, hasLength(2));
+      expect(parsed.first.messageId, 'm1');
+      expect(parsed.last.messageId, 'm2');
+      expect(parsed.first.type, PartyChatInteractionType.freeMessage);
+      expect(parsed.last.type, PartyChatInteractionType.playerAction);
+    });
+
+    test('clamps player_action roll to 0..20', () {
+      final low =
+          PartyChatInteraction.fromJson({
+                'message_id': 'm_low',
+                'type': 'player_action',
+                'owner_id': 'option1',
+                'owner_label': 'Arden',
+                'message_text': 'low roll',
+                'roll': -4,
+              })
+              as PlayerActionInteraction;
+
+      final high =
+          PartyChatInteraction.fromJson({
+                'message_id': 'm_high',
+                'type': 'player_action',
+                'owner_id': 'option1',
+                'owner_label': 'Arden',
+                'message_text': 'high roll',
+                'roll': 42,
+              })
+              as PlayerActionInteraction;
+
+      expect(low.roll, 0);
+      expect(high.roll, 20);
+      expect(low.toJson()['roll'], 0);
+      expect(high.toJson()['roll'], 20);
+    });
+
+    test('player_level_up parses numeric strings', () {
+      final interaction =
+          PartyChatInteraction.fromJson({
+                'message_id': 'm3',
+                'type': 'player_level_up',
+                'owner_id': 'option2',
+                'owner_label': 'Lyra',
+                'strength': '11',
+                'dexterity': '12',
+                'constitution': '13',
+                'intelligence': '14',
+                'wisdom': '15',
+                'charisma': '16',
+              })
+              as PlayerLevelUpInteraction;
+
+      expect(interaction.strength, 11);
+      expect(interaction.dexterity, 12);
+      expect(interaction.constitution, 13);
+      expect(interaction.intelligence, 14);
+      expect(interaction.wisdom, 15);
+      expect(interaction.charisma, 16);
+    });
+
+    test('unknown type throws FormatException', () {
+      expect(
+        () => PartyChatInteraction.fromJson({
+          'message_id': 'bad_1',
+          'type': 'unknown_type',
+          'owner_id': 'dm_llm',
+          'owner_label': 'DM',
+        }),
+        throwsA(isA<FormatException>()),
+      );
     });
   });
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'srd_models.dart';
+import 'srd_hero_models.dart';
 
 const Color inventoryBackGroundColor = Color.fromARGB(255, 160, 120, 70);
 const Color inventoryTextColor = Colors.white;

@@ -3,7 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'hero_panel_stats.dart';
-import 'srd_models.dart';
+import 'srd_hero_models.dart';
 import "characters_panel_parts.dart";
 import "hero_inventory.dart";
 import 'hero_ability.dart';

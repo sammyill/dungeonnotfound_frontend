@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'srd_models.dart';
+import 'srd_hero_models.dart';
 
 class HeroPanelsStats extends StatelessWidget {
   final HeroDataSRD hero;
