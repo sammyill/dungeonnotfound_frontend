@@ -1,14 +1,76 @@
 enum InventoryObjectType { onehand, twohand, armor, consumable, item, unknown }
 
+Map<String, dynamic> _readMap(dynamic value) {
+  if (value is Map<String, dynamic>) {
+    return value;
+  }
+  if (value is Map) {
+    return value.map((k, v) => MapEntry(k.toString(), v));
+  }
+  return const <String, dynamic>{};
+}
+
+List<dynamic> _readList(dynamic value) {
+  if (value is List<dynamic>) {
+    return value;
+  }
+  if (value is List) {
+    return List<dynamic>.from(value);
+  }
+  return const <dynamic>[];
+}
+
+String _readString(dynamic value, {String fallback = ''}) {
+  if (value == null) {
+    return fallback;
+  }
+  if (value is String) {
+    return value;
+  }
+  return value.toString();
+}
+
+int _readInt(dynamic value, {int fallback = 0}) {
+  if (value is int) {
+    return value;
+  }
+  if (value is num) {
+    return value.toInt();
+  }
+  if (value is String) {
+    return int.tryParse(value.trim()) ?? fallback;
+  }
+  return fallback;
+}
+
+bool _readBool(dynamic value, {bool fallback = false}) {
+  if (value is bool) {
+    return value;
+  }
+  if (value is num) {
+    return value != 0;
+  }
+  if (value is String) {
+    final normalized = value.trim().toLowerCase();
+    if (normalized == 'true' || normalized == '1' || normalized == 'yes') {
+      return true;
+    }
+    if (normalized == 'false' || normalized == '0' || normalized == 'no') {
+      return false;
+    }
+  }
+  return fallback;
+}
+
 class HeroDataSRD {
   final String id;
   final String name;
   final String imageUrl;
   final String imagePortrait;
   final String characterClass;
-  final Map<String, dynamic> stats;
-  final Map<String, dynamic> inventory;
-  final Map<String, dynamic> abilities;
+  final HeroStatsSRD stats;
+  final HeroInventorySRD inventory;
+  final HeroAbilitiesSRD abilities;
 
   const HeroDataSRD({
     required this.id,
@@ -20,9 +82,33 @@ class HeroDataSRD {
     required this.inventory,
     required this.abilities,
   });
+
+  factory HeroDataSRD.fromJson(Map<String, dynamic> json) {
+    return HeroDataSRD(
+      id: _readString(json['id']),
+      name: _readString(json['name']),
+      imageUrl: _readString(json['imageUrl']),
+      imagePortrait: _readString(json['imagePortrait']),
+      characterClass: _readString(json['characterClass']),
+      stats: HeroStatsSRD.fromJson(_readMap(json['stats'])),
+      inventory: HeroInventorySRD.fromJson(_readMap(json['inventory'])),
+      abilities: HeroAbilitiesSRD.fromJson(_readMap(json['abilities'])),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'imageUrl': imageUrl,
+    'imagePortrait': imagePortrait,
+    'characterClass': characterClass,
+    'stats': stats.toJson(),
+    'inventory': inventory.toJson(),
+    'abilities': abilities.toJson(),
+  };
 }
 
-class HeroStatsSRD{
+class HeroStatsSRD {
   final int hp;
   final int currentHp;
   final int level;
@@ -47,21 +133,21 @@ class HeroStatsSRD{
 
   factory HeroStatsSRD.fromJson(Map<String, dynamic> json) {
     return HeroStatsSRD(
-      hp: (json['hpbaseline'] ?? 0) as int,
-      currentHp: (json['hpcurrent'] ?? 0) as int,
-      level: (json['level'] ?? 1) as int,
-      strength: (json['strength'] ?? 10) as int,
-      dexterity: (json['dexterity'] ?? 10) as int,
-      constitution: (json['constitution'] ?? 10) as int,
-      intelligence: (json['intelligence'] ?? 10) as int,
-      wisdom: (json['wisdom'] ?? 10) as int,
-      charisma: (json['charisma'] ?? 10) as int,
+      hp: _readInt(json['hp']),
+      currentHp: _readInt(json['currentHp']),
+      level: _readInt(json['level'], fallback: 1),
+      strength: _readInt(json['strength'], fallback: 10),
+      dexterity: _readInt(json['dexterity'], fallback: 10),
+      constitution: _readInt(json['constitution'], fallback: 10),
+      intelligence: _readInt(json['intelligence'], fallback: 10),
+      wisdom: _readInt(json['wisdom'], fallback: 10),
+      charisma: _readInt(json['charisma'], fallback: 10),
     );
   }
 
   Map<String, dynamic> toJson() => {
-    'hpbaseline': hp,
-    'hpcurrent': currentHp,
+    'hp': hp,
+    'currentHp': currentHp,
     'level': level,
     'strength': strength,
     'dexterity': dexterity,
@@ -70,32 +156,6 @@ class HeroStatsSRD{
     'wisdom': wisdom,
     'charisma': charisma,
   };
-
-}
-
-
-
-extension HeroDataSRDAbilities on HeroDataSRD {
-  List<AbilityDataSRD> get abilityList {
-    final rawAbilities = abilities['abilities'];
-    if (rawAbilities is! List) {
-      return const <AbilityDataSRD>[];
-    }
-
-    final parsedAbilities = <AbilityDataSRD>[];
-    for (final dynamic rawAbility in rawAbilities) {
-      if (rawAbility is Map<String, dynamic>) {
-        parsedAbilities.add(AbilityDataSRD.fromMap(rawAbility));
-        continue;
-      }
-      if (rawAbility is Map) {
-        parsedAbilities.add(
-          AbilityDataSRD.fromMap(Map<String, dynamic>.from(rawAbility)),
-        );
-      }
-    }
-    return parsedAbilities;
-  }
 }
 
 extension InventoryObjectTypeParsing on InventoryObjectType {
@@ -145,9 +205,9 @@ class CurrencyData {
 
   factory CurrencyData.fromJson(Map<String, dynamic> json) {
     return CurrencyData(
-      gp: (json['gp'] ?? 0) as int,
-      sp: (json['sp'] ?? 0) as int,
-      cp: (json['cp'] ?? 0) as int,
+      gp: _readInt(json['gp']),
+      sp: _readInt(json['sp']),
+      cp: _readInt(json['cp']),
     );
   }
 
@@ -173,14 +233,14 @@ class InventoryItemData {
 
   factory InventoryItemData.fromJson(Map<String, dynamic> json) {
     return InventoryItemData(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      image: json['image'] as String,
+      id: _readString(json['id']),
+      name: _readString(json['name']),
+      image: _readString(json['image']),
       objectType: InventoryObjectTypeParsing.fromString(
-        json['objectType'] as String?,
+        _readString(json['objectType']),
       ),
-      quantity: (json['quantity'] ?? 1) as int,
-      description: (json['description'] ?? '') as String,
+      quantity: _readInt(json['quantity'], fallback: 1),
+      description: _readString(json['description']),
     );
   }
 
@@ -194,7 +254,7 @@ class InventoryItemData {
   };
 }
 
-class InventoryData {
+class HeroInventorySRD {
   final CurrencyData currency;
 
   /// slot -> itemId (or null if empty)
@@ -202,24 +262,30 @@ class InventoryData {
 
   final List<InventoryItemData> items;
 
-  const InventoryData({
+  const HeroInventorySRD({
     required this.currency,
     required this.equippedSlots,
     required this.items,
   });
 
-  factory InventoryData.fromJson(Map<String, dynamic> json) {
-    return InventoryData(
-      currency: CurrencyData.fromJson(
-        (json['currency'] as Map<String, dynamic>? ?? const {}),
-      ),
-      equippedSlots:
-          (json['equippedSlots'] as Map<String, dynamic>? ?? const {}).map(
-            (k, v) => MapEntry(k, v as String?),
-          ),
-      items: ((json['items'] as List<dynamic>? ?? const []))
-          .map((e) => InventoryItemData.fromJson(e as Map<String, dynamic>))
-          .toList(),
+  factory HeroInventorySRD.fromJson(Map<String, dynamic> json) {
+    final rawSlots = _readMap(json['equippedSlots']);
+    final parsedSlots = <String, String?>{};
+    for (final entry in rawSlots.entries) {
+      if (entry.value == null) {
+        parsedSlots[entry.key] = null;
+        continue;
+      }
+      final value = _readString(entry.value).trim();
+      parsedSlots[entry.key] = value.isEmpty ? null : value;
+    }
+
+    return HeroInventorySRD(
+      currency: CurrencyData.fromJson(_readMap(json['currency'])),
+      equippedSlots: parsedSlots,
+      items: _readList(json['items'])
+          .map((e) => InventoryItemData.fromJson(_readMap(e)))
+          .toList(growable: false),
     );
   }
 
@@ -296,6 +362,24 @@ enum AbilityActionCost {
   }
 }
 
+class HeroAbilitiesSRD {
+  final List<AbilityDataSRD> abilityList;
+
+  const HeroAbilitiesSRD({required this.abilityList});
+
+  factory HeroAbilitiesSRD.fromJson(Map<String, dynamic> json) {
+    return HeroAbilitiesSRD(
+      abilityList: _readList(json['abilities'])
+          .map((e) => AbilityDataSRD.fromJson(_readMap(e)))
+          .toList(growable: false),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'abilities': abilityList.map((ability) => ability.toJson()).toList(),
+  };
+}
+
 class AbilityDataSRD {
   final String id;
   final String name;
@@ -317,71 +401,27 @@ class AbilityDataSRD {
     this.actionCost = AbilityActionCost.action,
   });
 
-  factory AbilityDataSRD.fromMap(Map<String, dynamic> map) {
-    String readString(dynamic value) {
-      if (value == null) {
-        return '';
-      }
-      if (value is String) {
-        return value;
-      }
-      return value.toString();
-    }
-
-    int readInt(dynamic value, {int fallback = 0}) {
-      if (value is int) {
-        return value;
-      }
-      if (value is num) {
-        return value.toInt();
-      }
-      if (value is String) {
-        return int.tryParse(value) ?? fallback;
-      }
-      return fallback;
-    }
-
-    bool readBool(dynamic value, {bool fallback = false}) {
-      if (value is bool) {
-        return value;
-      }
-      if (value is num) {
-        return value != 0;
-      }
-      if (value is String) {
-        final normalized = value.trim().toLowerCase();
-        if (normalized == 'true' || normalized == '1' || normalized == 'yes') {
-          return true;
-        }
-        if (normalized == 'false' || normalized == '0' || normalized == 'no') {
-          return false;
-        }
-      }
-      return fallback;
-    }
-
+  factory AbilityDataSRD.fromJson(Map<String, dynamic> map) {
     return AbilityDataSRD(
-      id: readString(map['id']),
-      name: readString(map['name']),
-      image: readString(map['image']),
-      description: readString(map['description']),
-      range: readInt(map["range"]),
-      magical: readBool(map["magical"]),
-      kind: AbilityKind.fromString(readString(map['kind'])),
-      actionCost: AbilityActionCost.fromString(readString(map["actionCost"])),
+      id: _readString(map['id']),
+      name: _readString(map['name']),
+      image: _readString(map['image']),
+      description: _readString(map['description']),
+      range: _readInt(map['range']),
+      magical: _readBool(map['magical']),
+      kind: AbilityKind.fromString(_readString(map['kind'])),
+      actionCost: AbilityActionCost.fromString(_readString(map['actionCost'])),
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'image': image,
-      'description': description,
-      'range': range,
-      'magical': magical,
-      'kind': kind.name, // sends "attack", "heal", etc.
-      'actionCost': actionCost.name,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'image': image,
+    'description': description,
+    'range': range,
+    'magical': magical,
+    'kind': kind.name,
+    'actionCost': actionCost.name,
+  };
 }

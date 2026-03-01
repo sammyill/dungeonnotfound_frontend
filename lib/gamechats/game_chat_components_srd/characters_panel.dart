@@ -146,7 +146,7 @@ class _CharactersPanelSRDState extends State<CharactersPanelSRD> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "${hero.name} lv.${hero.stats["level"]}",
+                '${hero.name} lv.${hero.stats.level}',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 24,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'srd_models.dart';
 
-const Color inventoryBackGroundColor=Color.fromARGB(255, 160, 120, 70);
-const Color inventoryTextColor=Colors.white;
+const Color inventoryBackGroundColor = Color.fromARGB(255, 160, 120, 70);
+const Color inventoryTextColor = Colors.white;
 
 class HeroInventory extends StatelessWidget {
   final HeroDataSRD hero;
@@ -11,7 +11,7 @@ class HeroInventory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final inventory = InventoryData.fromJson(hero.inventory);
+    final inventory = hero.inventory;
     final mainHandItem = inventory.findItemById(
       inventory.equippedSlots['mainHand'],
     );
@@ -56,7 +56,7 @@ class HeroInventory extends StatelessWidget {
 class InventoryMoneyBar extends StatelessWidget {
   final CurrencyData currency;
 
-  const InventoryMoneyBar({super.key,required this.currency});
+  const InventoryMoneyBar({super.key, required this.currency});
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +92,7 @@ class CurrencyChip extends StatelessWidget {
   final String label;
   final int value;
 
-  const CurrencyChip({super.key,required this.label, required this.value});
+  const CurrencyChip({super.key, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -181,23 +181,24 @@ class EquippedSlotCard extends StatelessWidget {
           Expanded(
             flex: 1,
             child: Text(
-            "$slotLabel: $title",
-            style: const TextStyle(
-              color: Colors.white70,
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
+              "$slotLabel: $title",
+              style: const TextStyle(
+                color: Colors.white70,
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),),
+          ),
           Expanded(
-            flex:2,
+            flex: 2,
             child: EquippedItemImage(
-                  imagePath: item?.image,
-                  fallbackIcon: blockedByTwoHand
-                      ? Icons.block
-                      : item == null
-                      ? Icons.crop_square
-                      : iconForType(item!.objectType),
-                ),
+              imagePath: item?.image,
+              fallbackIcon: blockedByTwoHand
+                  ? Icons.block
+                  : item == null
+                  ? Icons.crop_square
+                  : iconForType(item!.objectType),
+            ),
           ),
         ],
       ),
@@ -205,18 +206,21 @@ class EquippedSlotCard extends StatelessWidget {
   }
 }
 
-
 class EquippedItemImage extends StatelessWidget {
   final String? imagePath;
   final IconData fallbackIcon;
 
-  const EquippedItemImage({super.key,required this.imagePath, required this.fallbackIcon});
+  const EquippedItemImage({
+    super.key,
+    required this.imagePath,
+    required this.fallbackIcon,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
       child: SizedBox(
-        width:50,
+        width: 50,
         height: 50,
         child: imagePath == null
             ? Icon(fallbackIcon, size: 18, color: Colors.white70)
@@ -232,61 +236,58 @@ class EquippedItemImage extends StatelessWidget {
   }
 }
 
-
 class InventoryItemsList extends StatelessWidget {
-  final InventoryData inventory;
+  final HeroInventorySRD inventory;
 
-  const InventoryItemsList({super.key,required this.inventory});
+  const InventoryItemsList({super.key, required this.inventory});
 
   @override
   Widget build(BuildContext context) {
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(10, 8, 10, 6),
-            child: Text(
-              'Items',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const Padding(
+          padding: EdgeInsets.fromLTRB(10, 8, 10, 6),
+          child: Text(
+            'Items',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
           ),
-          const Divider(height: 1, color: Color.fromARGB(120, 189, 88, 0)),
-          Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.all(3),
-              itemCount: inventory.items.length,
-              separatorBuilder: (_, index) => const SizedBox(height: 6),
-              itemBuilder: (context, index) {
-                final item = inventory.items[index];
-                return InventoryItemTile(
-                  item: item,
-                  isEquipped: inventory.isEquipped(item.id),
-                );
-              },
-            ),
+        ),
+        const Divider(height: 1, color: Color.fromARGB(120, 189, 88, 0)),
+        Expanded(
+          child: ListView.separated(
+            padding: const EdgeInsets.all(3),
+            itemCount: inventory.items.length,
+            separatorBuilder: (_, index) => const SizedBox(height: 6),
+            itemBuilder: (context, index) {
+              final item = inventory.items[index];
+              return InventoryItemTile(
+                item: item,
+                isEquipped: inventory.isEquipped(item.id),
+              );
+            },
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 }
-
 
 class InventoryItemTile extends StatelessWidget {
   final InventoryItemData item;
   final bool isEquipped;
 
-  const InventoryItemTile({super.key,required this.item, required this.isEquipped});
+  const InventoryItemTile({
+    super.key,
+    required this.item,
+    required this.isEquipped,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: inventoryBackGroundColor,
-      ),
+      decoration: BoxDecoration(color: inventoryBackGroundColor),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -363,7 +364,11 @@ class ItemThumb extends StatelessWidget {
   final String? imagePath;
   final IconData fallbackIcon;
 
-  const ItemThumb({super.key,required this.imagePath, required this.fallbackIcon});
+  const ItemThumb({
+    super.key,
+    required this.imagePath,
+    required this.fallbackIcon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -402,5 +407,3 @@ IconData iconForType(InventoryObjectType objectType) {
       return Icons.help_outline;
   }
 }
-
-

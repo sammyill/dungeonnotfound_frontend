@@ -34,7 +34,7 @@ class HeroPanelsStats extends StatelessWidget {
 class HeroImageFill extends StatelessWidget {
   final String imagePath;
 
-  const HeroImageFill({super.key,required this.imagePath});
+  const HeroImageFill({super.key, required this.imagePath});
 
   @override
   Widget build(BuildContext context) {
@@ -63,17 +63,41 @@ class HeroImageFill extends StatelessWidget {
 }
 
 class CharacterStats extends StatelessWidget {
-  final Map<String, dynamic> stats;
+  final HeroStatsSRD stats;
 
   const CharacterStats({super.key, required this.stats});
 
   static const List<_StatField> _charstats = [
-    _StatField('Strength', 'strength', 'assets/icons/strength.svg'),
-    _StatField('Dexterity', 'dexterity', 'assets/icons/dexterity.svg'),
-    _StatField('Constitution', 'constitution', 'assets/icons/constitution.svg'),
-    _StatField('Intelligence', 'intelligence', 'assets/icons/intelligence.svg'),
-    _StatField('Wisdom', 'wisdom', 'assets/icons/wisdom.svg'),
-    _StatField('Charisma', 'charisma', 'assets/icons/charisma.svg'),
+    _StatField(
+      label: 'Strength',
+      iconPath: 'assets/icons/strength.svg',
+      selector: _strengthValue,
+    ),
+    _StatField(
+      label: 'Dexterity',
+      iconPath: 'assets/icons/dexterity.svg',
+      selector: _dexterityValue,
+    ),
+    _StatField(
+      label: 'Constitution',
+      iconPath: 'assets/icons/constitution.svg',
+      selector: _constitutionValue,
+    ),
+    _StatField(
+      label: 'Intelligence',
+      iconPath: 'assets/icons/intelligence.svg',
+      selector: _intelligenceValue,
+    ),
+    _StatField(
+      label: 'Wisdom',
+      iconPath: 'assets/icons/wisdom.svg',
+      selector: _wisdomValue,
+    ),
+    _StatField(
+      label: 'Charisma',
+      iconPath: 'assets/icons/charisma.svg',
+      selector: _charismaValue,
+    ),
   ];
 
   @override
@@ -95,7 +119,7 @@ class CharacterStats extends StatelessWidget {
                 child: DNDStatsDisplay(
                   iconAssetPath: left.iconPath,
                   statName: left.label,
-                  value: (stats[left.key] ?? '-').toString(),
+                  value: left.selector(stats).toString(),
                 ),
               ),
               const SizedBox(width: 12),
@@ -105,7 +129,7 @@ class CharacterStats extends StatelessWidget {
                     : DNDStatsDisplay(
                         iconAssetPath: right.iconPath,
                         statName: right.label,
-                        value: (stats[right.key] ?? '-').toString(),
+                        value: right.selector(stats).toString(),
                       ),
               ),
             ],
@@ -125,20 +149,40 @@ class CharacterStats extends StatelessWidget {
   }
 }
 
+int _strengthValue(HeroStatsSRD stats) => stats.strength;
+
+int _dexterityValue(HeroStatsSRD stats) => stats.dexterity;
+
+int _constitutionValue(HeroStatsSRD stats) => stats.constitution;
+
+int _intelligenceValue(HeroStatsSRD stats) => stats.intelligence;
+
+int _wisdomValue(HeroStatsSRD stats) => stats.wisdom;
+
+int _charismaValue(HeroStatsSRD stats) => stats.charisma;
+
 class _StatField {
   final String label;
-  final String key;
   final String iconPath;
+  final int Function(HeroStatsSRD stats) selector;
 
-  const _StatField(this.label, this.key, this.iconPath);
+  const _StatField({
+    required this.label,
+    required this.iconPath,
+    required this.selector,
+  });
 }
 
 class DNDStatsDisplay extends StatelessWidget {
   final String iconAssetPath;
   final String statName;
   final String value;
-  static const EdgeInsetsGeometry contentPadding=EdgeInsets.symmetric(horizontal: 14);
-   static const BorderRadius borderRadius=BorderRadius.all(Radius.circular(10));
+  static const EdgeInsetsGeometry contentPadding = EdgeInsets.symmetric(
+    horizontal: 14,
+  );
+  static const BorderRadius borderRadius = BorderRadius.all(
+    Radius.circular(10),
+  );
   static const TextStyle labelStyle = TextStyle(
     color: Color.fromARGB(255, 0, 0, 0),
     fontSize: 14,
@@ -149,8 +193,7 @@ class DNDStatsDisplay extends StatelessWidget {
     fontSize: 15,
     fontWeight: FontWeight.w800,
   );
-  static String scrollBackgroundAssetPath =
-      'assets/images/scroll.png';
+  static String scrollBackgroundAssetPath = 'assets/images/scroll.png';
 
   const DNDStatsDisplay({
     super.key,
@@ -161,49 +204,42 @@ class DNDStatsDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     return Row(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      AspectRatio(
-        aspectRatio: 1, // square icon area: width == available height
-        child: SvgPicture.asset(
-          iconAssetPath,
-          fit: BoxFit.contain,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        AspectRatio(
+          aspectRatio: 1, // square icon area: width == available height
+          child: SvgPicture.asset(iconAssetPath, fit: BoxFit.contain),
         ),
-      ),
-      const SizedBox(width: 10),
-      Expanded(
-        child: ClipRRect(
-          borderRadius: borderRadius,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Image.asset(
-                scrollBackgroundAssetPath,
-                fit: BoxFit.fill,
-              ),
-              Center(
-                child: Padding(
-                  padding: contentPadding,
-                  child: RichText(
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    text: TextSpan(
-                      style: labelStyle,
-                      children: [
-                        TextSpan(text: '$statName '),
-                        TextSpan(text: value, style: valueStyle),
-                      ],
+        const SizedBox(width: 10),
+        Expanded(
+          child: ClipRRect(
+            borderRadius: borderRadius,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.asset(scrollBackgroundAssetPath, fit: BoxFit.fill),
+                Center(
+                  child: Padding(
+                    padding: contentPadding,
+                    child: RichText(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        style: labelStyle,
+                        children: [
+                          TextSpan(text: '$statName '),
+                          TextSpan(text: value, style: valueStyle),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    ],
-  );
+      ],
+    );
   }
 }
-

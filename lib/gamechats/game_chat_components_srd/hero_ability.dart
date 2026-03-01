@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'srd_models.dart';
 
-const Color _abilitiesPanelColor = Color.fromARGB(255, 92, 55, 10);
 const Color _abilityCardColor = Color.fromARGB(255, 120, 74, 18);
 const Color _abilityTagColor = Color.fromARGB(255, 68, 34, 0);
 
@@ -13,14 +12,11 @@ class HeroAbilities extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final abilities = hero.abilityList;
+    final abilities = hero.abilities.abilityList;
 
-    return Container(
+    return SizedBox(
       width: double.infinity,
-      decoration: BoxDecoration(
-        color: _abilitiesPanelColor,
-        borderRadius: BorderRadius.circular(10),
-      ),
+
       child: abilities.isEmpty
           ? const Center(
               child: Text(

@@ -5,16 +5,16 @@ import 'game_chat_components_srd/characters_panel.dart';
 class GameChatPageSRD extends StatelessWidget {
   const GameChatPageSRD({super.key});
 
-  static const List<HeroDataSRD> _heroes = [
-    HeroDataSRD(
-      id: 'option1',
-      name: 'Arden',
-      imageUrl: 'assets/images/paladinfullbody.webp',
-      imagePortrait: 'assets/images/paladinportrait.png',
-      characterClass: "paladin",
-      stats: {
-        'hpbaseline': 140,
-        'hpcurrent': 120,
+  static const List<Map<String, dynamic>> _heroesJson = [
+    {
+      'id': 'option1',
+      'name': 'Arden',
+      'imageUrl': 'assets/images/paladinfullbody.webp',
+      'imagePortrait': 'assets/images/paladinportrait.png',
+      'characterClass': "paladin",
+      'stats': {
+        'hp': 140,
+        'currentHp': 120,
         'level': 6,
         'strength': 16,
         'dexterity': 12,
@@ -23,7 +23,7 @@ class GameChatPageSRD extends StatelessWidget {
         'wisdom': 11,
         'charisma': 9,
       },
-      inventory: {
+      'inventory': {
         'currency': {'gp': 250, 'sp': 8, 'cp': 14},
         'equippedSlots': {
           'mainHand': 'itm_arden_longsword_01',
@@ -86,7 +86,7 @@ class GameChatPageSRD extends StatelessWidget {
           },
         ],
       },
-      abilities: {
+      'abilities': {
         'abilities': [
           {
             'id': 'ab_arden_slash_01',
@@ -123,16 +123,16 @@ class GameChatPageSRD extends StatelessWidget {
           },
         ],
       },
-    ),
-    HeroDataSRD(
-      id: 'option2',
-      name: 'Lyra',
-      imageUrl: 'assets/images/clericfullbody.webp',
-      imagePortrait: 'assets/images/clericportrait.png',
-      characterClass: "cleric",
-      stats: {
-        'hpbaseline': 100,
-        'hpcurrent': 88,
+    },
+    {
+      'id': 'option2',
+      'name': 'Lyra',
+      'imageUrl': 'assets/images/clericfullbody.webp',
+      'imagePortrait': 'assets/images/clericportrait.png',
+      'characterClass': "cleric",
+      'stats': {
+        'hp': 100,
+        'currentHp': 88,
         'level': 5,
         'strength': 10,
         'dexterity': 17,
@@ -141,7 +141,7 @@ class GameChatPageSRD extends StatelessWidget {
         'wisdom': 12,
         'charisma': 14,
       },
-      inventory: {
+      'inventory': {
         'currency': {'gp': 180, 'sp': 15, 'cp': 3},
         'equippedSlots': {
           'mainHand': 'itm_lyra_mace_01',
@@ -204,7 +204,7 @@ class GameChatPageSRD extends StatelessWidget {
           },
         ],
       },
-      abilities: {
+      'abilities': {
         'abilities': [
           {
             'id': 'ab_lyra_mace_strike_01',
@@ -241,16 +241,16 @@ class GameChatPageSRD extends StatelessWidget {
           },
         ],
       },
-    ),
-    HeroDataSRD(
-      id: 'option3',
-      name: 'Torin',
-      imageUrl: 'assets/images/thieffullbody.webp',
-      imagePortrait: 'assets/images/thiefportrait.png',
-      characterClass: "thief",
-      stats: {
-        'hpbaseline': 180,
-        'hpcurrent': 165,
+    },
+    {
+      'id': 'option3',
+      'name': 'Torin',
+      'imageUrl': 'assets/images/thieffullbody.webp',
+      'imagePortrait': 'assets/images/thiefportrait.png',
+      'characterClass': "thief",
+      'stats': {
+        'hp': 180,
+        'currentHp': 165,
         'level': 7,
         'strength': 18,
         'dexterity': 9,
@@ -259,7 +259,7 @@ class GameChatPageSRD extends StatelessWidget {
         'wisdom': 10,
         'charisma': 7,
       },
-      inventory: {
+      'inventory': {
         'currency': {'gp': 95, 'sp': 22, 'cp': 40},
         'equippedSlots': {
           'mainHand': 'itm_torin_dagger_01',
@@ -329,7 +329,7 @@ class GameChatPageSRD extends StatelessWidget {
           },
         ],
       },
-      abilities: {
+      'abilities': {
         'abilities': [
           {
             'id': 'ab_torin_backstab_01',
@@ -366,16 +366,16 @@ class GameChatPageSRD extends StatelessWidget {
           },
         ],
       },
-    ),
-    HeroDataSRD(
-      id: 'option4',
-      name: 'Nia',
-      imageUrl: 'assets/images/wizardfullbody.webp',
-      imagePortrait: 'assets/images/wizardportrait.png',
-      characterClass: "wizard",
-      stats: {
-        'hpbaseline': 120,
-        'hpcurrent': 110,
+    },
+    {
+      'id': 'option4',
+      'name': 'Nia',
+      'imageUrl': 'assets/images/wizardfullbody.webp',
+      'imagePortrait': 'assets/images/wizardportrait.png',
+      'characterClass': "wizard",
+      'stats': {
+        'hp': 120,
+        'currentHp': 110,
         'level': 6,
         'strength': 9,
         'dexterity': 13,
@@ -384,7 +384,7 @@ class GameChatPageSRD extends StatelessWidget {
         'wisdom': 15,
         'charisma': 12,
       },
-      inventory: {
+      'inventory': {
         'currency': {'gp': 310, 'sp': 5, 'cp': 0},
         'equippedSlots': {
           'mainHand': 'itm_nia_staff_01',
@@ -439,7 +439,7 @@ class GameChatPageSRD extends StatelessWidget {
           },
         ],
       },
-      abilities: {
+      'abilities': {
         'abilities': [
           {
             'id': 'ab_nia_arc_bolt_01',
@@ -476,8 +476,12 @@ class GameChatPageSRD extends StatelessWidget {
           },
         ],
       },
-    ),
+    },
   ];
+
+  static final List<HeroDataSRD> _heroes = _heroesJson
+      .map((heroJson) => HeroDataSRD.fromJson(heroJson))
+      .toList(growable: false);
 
   static final List<String> _heroIds = _heroes
       .map((HeroDataSRD hero) => hero.id)
