@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'gamechats/game_chat_srd.dart';
 import 'dart:math';
-
+import "gamechats/game_chat_providers.dart";
 void main() {
   runApp(
     // Add ProviderScope above your app
@@ -20,7 +20,18 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const GameChatPageSRD(),
+      home: Consumer(
+        builder: (context, ref, child) {
+          final heroesDataAsync = ref.watch(getHeroesDataProvider);
+          return heroesDataAsync.when(
+            data: (heroesData) => GameChatPageSRD(heroesJson: heroesData),
+            loading: () =>
+                const Scaffold(body: Center(child: CircularProgressIndicator())),
+            error: (error, stackTrace) =>
+                Scaffold(body: Center(child: Text('Failed to load heroes: $error'))),
+          );
+        },
+      ),
     );
   }
 }

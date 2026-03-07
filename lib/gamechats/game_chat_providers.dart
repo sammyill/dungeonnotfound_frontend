@@ -1,15 +1,10 @@
-import 'package:flutter/material.dart';
-import 'game_chat_components_srd/characters_panel.dart';
-import 'game_chat_components_srd/party_chat.dart';
-import 'game_chat_components_srd/srd_chat_models.dart';
-import 'game_chat_components_srd/srd_hero_models.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dio/dio.dart';
 
 
-class GameChatPageSRD extends StatelessWidget {
-  final List<Map<String, dynamic>> heroesJson;
-   GameChatPageSRD({super.key, required this.heroesJson});
-/*
-  static const List<Map<String, dynamic>> _heroesJson = [
+final getHeroesDataProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
+  //for now we will return direcly the data 
+  return [
     {
       'id': 'option1',
       'name': 'Arden',
@@ -482,112 +477,4 @@ class GameChatPageSRD extends StatelessWidget {
       },
     },
   ];
-
-  */
-  late final List<HeroDataSRD> _heroes = heroesJson
-      .map((heroJson) => HeroDataSRD.fromJson(heroJson))
-      .toList(growable: false);
-
-  static const List<Map<String, dynamic>> _chatInteractionsJson = [
-    {
-      'message_id': 'msg_001',
-      'type': 'free_message',
-      'owner_id': 'dm_llm',
-      'owner_label': 'DM',
-      'message_text':
-          'The cavern opens before you. Your torchlight catches ancient carvings on the wall.',
-    },
-    {
-      'message_id': 'msg_002',
-      'type': 'dm_level_up',
-      'owner_id': 'dm_llm',
-      'owner_label': 'DM',
-      'message_text':
-          'Lyra has gained enough experience to level up. Assign your improvements before continuing.',
-    },
-    {
-      'message_id': 'msg_003',
-      'type': 'player_level_up',
-      'owner_id': 'option2',
-      'owner_label': 'Lyra',
-      'strength': 11,
-      'dexterity': 18,
-      'constitution': 12,
-      'intelligence': 14,
-      'wisdom': 13,
-      'charisma': 14,
-    },
-    {
-      'message_id': 'msg_004',
-      'type': 'dm_action',
-      'owner_id': 'dm_llm',
-      'owner_label': 'DM',
-      'message_text':
-          'Torin, make a stealth check while approaching the sentry.',
-      'action_target': 'option3',
-    },
-    {
-      'message_id': 'msg_005',
-      'type': 'player_action',
-      'owner_id': 'option3',
-      'owner_label': 'Torin',
-      'message_text':
-          'I slip into the shadows and move behind the broken pillar.',
-      'roll': 17,
-    },
-  ];
-
-  static final List<PartyChatInteraction> _chatInteractions =
-      _chatInteractionsJson
-          .map(PartyChatInteraction.fromJson)
-          .toList(growable: false);
-
-  late final List<String> _heroIds = _heroes
-      .map((HeroDataSRD hero) => hero.id)
-      .toList(growable: false);
-
-  HeroDataSRD _heroById(String heroId) {
-    return _heroes.firstWhere(
-      (HeroDataSRD hero) => hero.id == heroId,
-      orElse: () => _heroes.first,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (_heroes.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return Scaffold(
-      body: SizedBox.expand(
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: PartyChat(
-                    interactions: _chatInteractions,
-                    heroes: _heroes,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  flex: 1,
-                  child: CharactersPanelSRD(
-                    hero: _heroes.first,
-                    heroIds: _heroIds,
-                    heroById: _heroById,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+});
