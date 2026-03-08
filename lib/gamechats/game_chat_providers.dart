@@ -1,10 +1,102 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:dio/dio.dart';
 
+class GameSessionState {
+  final List<Map<String, dynamic>> heroesJson;
+  final List<Map<String, dynamic>> chatJson;
 
-final getHeroesDataProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
-  //for now we will return direcly the data 
-  return [
+  const GameSessionState({
+    required this.heroesJson,
+    required this.chatJson,
+  });
+
+  GameSessionState copyWith({
+    List<Map<String, dynamic>>? heroesJson,
+    List<Map<String, dynamic>>? chatJson,
+  }) {
+    return GameSessionState(
+      heroesJson: heroesJson ?? this.heroesJson,
+      chatJson: chatJson ?? this.chatJson,
+    );
+  }
+}
+
+final gameSessionProvider =
+    AsyncNotifierProvider<GameSessionController, GameSessionState>(
+      GameSessionController.new,
+    );
+
+class GameSessionController extends AsyncNotifier<GameSessionState> {
+  StreamSubscription<Map<String, dynamic>>? _chatUpdatesSubscription;
+
+  @override
+  Future<GameSessionState> build() async {
+    ref.onDispose(() => _chatUpdatesSubscription?.cancel());
+
+    // Replace these mock values with backend calls when the API exists.
+    // final heroesJson = await _loadHeroesFromBackend();
+    // final chatJson = await _loadChatFromBackend();
+    final heroesJson = _cloneJsonList(_mockHeroesJson);
+    final chatJson = _cloneJsonList(_mockChatJson);
+
+    _startChatUpdatesSubscription();
+
+    return GameSessionState(
+      heroesJson: heroesJson,
+      chatJson: chatJson,
+    );
+  }
+
+  void _startChatUpdatesSubscription() {
+    _chatUpdatesSubscription?.cancel();
+
+    // Wire the backend stream here when it exists.
+    // _chatUpdatesSubscription = watchIncomingChatMessagesFromBackend().listen(
+    //   _applyIncomingChatMessage,
+    //   onError: (Object error, StackTrace stackTrace) {
+    //     state = AsyncError(error, stackTrace);
+    //   },
+    // );
+
+    _chatUpdatesSubscription = null;
+  }
+
+  void _applyIncomingChatMessage(Map<String, dynamic> message) {
+    final currentState = state.value;
+    if (currentState == null) {
+      return;
+    }
+
+    final messageId = message['message_id'];
+    final alreadyExists = currentState.chatJson.any(
+      (existingMessage) => existingMessage['message_id'] == messageId,
+    );
+    if (alreadyExists) {
+      return;
+    }
+
+    state = AsyncData(
+      currentState.copyWith(
+        chatJson: [
+          ...currentState.chatJson,
+          Map<String, dynamic>.from(message),
+        ],
+      ),
+    );
+  }
+
+  // Useful while there is no backend stream yet.
+  void addLocalChatMessage(Map<String, dynamic> message) {
+    _applyIncomingChatMessage(message);
+  }
+}
+
+List<Map<String, dynamic>> _cloneJsonList(List<Map<String, dynamic>> source) {
+  return source.map(Map<String, dynamic>.from).toList(growable: false);
+}
+
+final List<Map<String, dynamic>> _mockHeroesJson = [
     {
       'id': 'option1',
       'name': 'Arden',
@@ -477,11 +569,8 @@ final getHeroesDataProvider = FutureProvider<List<Map<String, dynamic>>>((ref) a
       },
     },
   ];
-});
 
-
-final getChatDataProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
-  return [
+final List<Map<String, dynamic>> _mockChatJson = [
     {
       'message_id': 'msg_001',
       'type': 'free_message',
@@ -529,4 +618,3 @@ final getChatDataProvider = FutureProvider<List<Map<String, dynamic>>>((ref) asy
       'roll': 17,
     },
   ];
-});

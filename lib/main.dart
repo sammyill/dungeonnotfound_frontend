@@ -22,27 +22,18 @@ class MyApp extends StatelessWidget {
       ),
       home: Consumer(
         builder: (context, ref, child) {
-          final heroesDataAsync = ref.watch(getHeroesDataProvider);
-          final chatDataAsync = ref.watch(getChatDataProvider);
+          final gameSessionAsync = ref.watch(gameSessionProvider);
 
-          return heroesDataAsync.when(
-            data: (heroesData) => chatDataAsync.when(
-              data: (chatData) => GameChatPageSRD(
-                heroesJson: heroesData,
-                chatJson: chatData,
-              ),
-              loading: () => const Scaffold(
-                body: Center(child: CircularProgressIndicator()),
-              ),
-              error: (error, stackTrace) => Scaffold(
-                body: Center(child: Text('Failed to load chat: $error')),
-              ),
+          return gameSessionAsync.when(
+            data: (gameSession) => GameChatPageSRD(
+              heroesJson: gameSession.heroesJson,
+              chatJson: gameSession.chatJson,
             ),
             loading: () =>
                 const Scaffold(body: Center(child: CircularProgressIndicator())),
             error: (error, stackTrace) =>
                 Scaffold(
-                  body: Center(child: Text('Failed to load heroes: $error')),
+                  body: Center(child: Text('Failed to load session: $error')),
                 ),
           );
         },
