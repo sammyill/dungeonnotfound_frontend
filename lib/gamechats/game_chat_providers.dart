@@ -478,3 +478,55 @@ final getHeroesDataProvider = FutureProvider<List<Map<String, dynamic>>>((ref) a
     },
   ];
 });
+
+
+final getChatDataProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
+  return [
+    {
+      'message_id': 'msg_001',
+      'type': 'free_message',
+      'owner_id': 'dm_llm',
+      'owner_label': 'DM',
+      'message_text':
+          'The cavern opens before you. Your torchlight catches ancient carvings on the wall.',
+    },
+    {
+      'message_id': 'msg_002',
+      'type': 'dm_level_up',
+      'owner_id': 'dm_llm',
+      'owner_label': 'DM',
+      'message_text':
+          'Lyra has gained enough experience to level up. Assign your improvements before continuing.',
+    },
+    {
+      'message_id': 'msg_003',
+      'type': 'player_level_up',
+      'owner_id': 'option2',
+      'owner_label': 'Lyra',
+      'strength': 11,
+      'dexterity': 18,
+      'constitution': 12,
+      'intelligence': 14,
+      'wisdom': 13,
+      'charisma': 14,
+    },
+    {
+      'message_id': 'msg_004',
+      'type': 'dm_action',
+      'owner_id': 'dm_llm',
+      'owner_label': 'DM',
+      'message_text':
+          'Torin, make a stealth check while approaching the sentry.',
+      'action_target': 'option3',
+    },
+    {
+      'message_id': 'msg_005',
+      'type': 'player_action',
+      'owner_id': 'option3',
+      'owner_label': 'Torin',
+      'message_text':
+          'I slip into the shadows and move behind the broken pillar.',
+      'roll': 17,
+    },
+  ];
+});
