@@ -94,6 +94,7 @@ void main() {
       final stats = HeroStatsSRD.fromJson({
         'hp': '140',
         'currentHp': 120,
+        'currentExp': '1860',
         'level': '6',
         'strength': 16,
         'dexterity': 12,
@@ -105,11 +106,13 @@ void main() {
 
       expect(stats.hp, 140);
       expect(stats.currentHp, 120);
+      expect(stats.currentExp, 1860);
       expect(stats.level, 6);
 
       final json = stats.toJson();
       expect(json['hp'], 140);
       expect(json['currentHp'], 120);
+      expect(json['currentExp'], 1860);
       expect(json.containsKey('hpbaseline'), isFalse);
       expect(json.containsKey('hpcurrent'), isFalse);
     });
@@ -122,6 +125,15 @@ void main() {
 
       expect(stats.hp, 0);
       expect(stats.currentHp, 0);
+      expect(stats.currentExp, 0);
+    });
+  });
+
+  group('EXP helper table', () {
+    test('clamps levels to the supported dummy range', () {
+      expect(expCapForLevel(0), heroLevelExpTable[1]);
+      expect(expCapForLevel(6), heroLevelExpTable[6]);
+      expect(expCapForLevel(99), heroLevelExpTable[heroMaxLevel]);
     });
   });
 
@@ -168,6 +180,7 @@ void main() {
         'stats': {
           'hp': '140',
           'currentHp': 120,
+          'currentExp': '1860',
           'level': '6',
           'strength': 16,
           'dexterity': 12,
@@ -213,6 +226,7 @@ void main() {
       final hero = HeroDataSRD.fromJson(payload);
       expect(hero.id, 'option1');
       expect(hero.stats.hp, 140);
+      expect(hero.stats.currentExp, 1860);
       expect(hero.inventory.currency.gp, 250);
       expect(hero.abilities.abilityList.first.magical, isTrue);
 
@@ -222,6 +236,7 @@ void main() {
       final abilitiesJson = json['abilities'] as Map<String, dynamic>;
       expect(statsJson['hp'], 140);
       expect(statsJson['currentHp'], 120);
+      expect(statsJson['currentExp'], 1860);
       expect(inventoryJson['currency'], isA<Map<String, dynamic>>());
       expect(abilitiesJson['abilities'], isA<List<dynamic>>());
     });

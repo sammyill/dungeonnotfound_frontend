@@ -140,17 +140,21 @@ class _CharactersPanelSRDState extends State<CharactersPanelSRD> {
         Container(
           width: double.infinity,
           padding: const EdgeInsets.all(16),
-
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                '${hero.name} lv.${hero.stats.level}',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
+              Padding(
+                padding: const EdgeInsets.only(right: 48),
+                child: Text(
+                  '${hero.name} lv.${hero.stats.level}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
@@ -158,30 +162,33 @@ class _CharactersPanelSRDState extends State<CharactersPanelSRD> {
             ],
           ),
         ),
-        Positioned(
-          top: 12,
-          right: 12,
-          child: Row(
-            children: [
-              _PanelIconButton(
-                assetPath: 'assets/icons/Character.svg',
-                isSelected: _selectedTab == HeroPanelTab.stats,
-                onTap: () => _selectTab(HeroPanelTab.stats),
-              ),
-              const SizedBox(width: 8),
-              _PanelIconButton(
-                assetPath: 'assets/icons/inventory.svg',
-                isSelected: _selectedTab == HeroPanelTab.inventory,
-                onTap: () => _selectTab(HeroPanelTab.inventory),
-              ),
-              const SizedBox(width: 8),
-              _PanelIconButton(
-                assetPath: 'assets/icons/abilities.svg',
-                isSelected: _selectedTab == HeroPanelTab.abilities,
-                onTap: () => _selectTab(HeroPanelTab.abilities),
-              ),
-            ],
-          ),
+        Positioned(top: 16, right: 16, child: _buildPanelTabs()),
+      ],
+    );
+  }
+
+  Widget _buildPanelTabs() {
+  
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: 3,
+      children: [
+        _PanelIconButton(
+          assetPath: 'assets/icons/Character.svg',
+          isSelected: _selectedTab == HeroPanelTab.stats,
+          onTap: () => _selectTab(HeroPanelTab.stats),
+        ),
+        const SizedBox(height: 8),
+        _PanelIconButton(
+          assetPath: 'assets/icons/inventory.svg',
+          isSelected: _selectedTab == HeroPanelTab.inventory,
+          onTap: () => _selectTab(HeroPanelTab.inventory),
+        ),
+        const SizedBox(height: 8),
+        _PanelIconButton(
+          assetPath: 'assets/icons/abilities.svg',
+          isSelected: _selectedTab == HeroPanelTab.abilities,
+          onTap: () => _selectTab(HeroPanelTab.abilities),
         ),
       ],
     );
@@ -239,6 +246,147 @@ class _CharactersPanelSRDState extends State<CharactersPanelSRD> {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+class _HeroStatusSummary extends StatelessWidget {
+  final HeroDataSRD hero;
+
+  const _HeroStatusSummary({required this.hero});
+
+  @override
+  Widget build(BuildContext context) {
+    final stats = hero.stats;
+    final hp = stats.hp;
+    final currentHp = stats.currentHp;
+    final hpProgress = hp <= 0 ? 0.0 : _clampProgress(currentHp / hp);
+    final isMaxLevel = stats.level >= heroMaxLevel;
+    final expCap = expCapForLevel(stats.level);
+    final expProgress = isMaxLevel
+        ? 1.0
+        : _clampProgress(stats.currentExp / expCap);
+    final expValueText = isMaxLevel ? 'Max/Max' : '${stats.currentExp}/$expCap';
+
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 182),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _HeroProgressCard(
+            label: 'Health',
+            valueText: '$currentHp/$hp',
+            progress: hpProgress,
+            fillColor: const Color(0xFFD65245),
+            fillKey: const ValueKey('hero-health-fill'),
+          ),
+          const SizedBox(width: 6),
+          _HeroProgressCard(
+            label: 'EXP',
+            valueText: expValueText,
+            progress: expProgress,
+            fillColor: const Color(0xFF4C8DDA),
+            fillKey: const ValueKey('hero-exp-fill'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  double _clampProgress(num value) {
+    if (!value.isFinite || value <= 0) {
+      return 0.0;
+    }
+    if (value >= 1) {
+      return 1.0;
+    }
+    return value.toDouble();
+  }
+}
+
+class _HeroProgressCard extends StatelessWidget {
+  static const double _cardWidth = 88;
+  final String label;
+  final String valueText;
+  final double progress;
+  final Color fillColor;
+  final Key fillKey;
+
+  const _HeroProgressCard({
+    required this.label,
+    required this.valueText,
+    required this.progress,
+    required this.fillColor,
+    required this.fillKey,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: _cardWidth,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Color(0xFF2E2B26),
+                        fontSize: 8,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    valueText,
+                    textAlign: TextAlign.right,
+                    style: const TextStyle(
+                      color: Color(0xFF2E2B26),
+                      fontSize: 8,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(999),
+                child: SizedBox(
+                  height: 4,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      const DecoratedBox(
+                        decoration: BoxDecoration(color: Color(0xFFD9D9D9)),
+                      ),
+                      FractionallySizedBox(
+                        key: fillKey,
+                        alignment: Alignment.centerLeft,
+                        widthFactor: progress,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(color: fillColor),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

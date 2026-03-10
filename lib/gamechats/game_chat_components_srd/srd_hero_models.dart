@@ -62,6 +62,38 @@ bool _readBool(dynamic value, {bool fallback = false}) {
   return fallback;
 }
 
+const int heroMaxLevel = 20;
+
+const Map<int, int> heroLevelExpTable = <int, int>{
+  1: 300,
+  2: 600,
+  3: 900,
+  4: 1400,
+  5: 2100,
+  6: 3000,
+  7: 4200,
+  8: 5700,
+  9: 7500,
+  10: 9600,
+  11: 12000,
+  12: 14700,
+  13: 17700,
+  14: 21000,
+  15: 24600,
+  16: 28500,
+  17: 32700,
+  18: 37200,
+  19: 42000,
+  20: 47000,
+};
+
+int expCapForLevel(int level) {
+  final normalizedLevel = level < 1
+      ? 1
+      : (level > heroMaxLevel ? heroMaxLevel : level);
+  return heroLevelExpTable[normalizedLevel]!;
+}
+
 class HeroDataSRD {
   final String id;
   final String name;
@@ -111,6 +143,7 @@ class HeroDataSRD {
 class HeroStatsSRD {
   final int hp;
   final int currentHp;
+  final int currentExp;
   final int level;
   final int strength;
   final int dexterity;
@@ -122,6 +155,7 @@ class HeroStatsSRD {
   const HeroStatsSRD({
     required this.hp,
     required this.currentHp,
+    required this.currentExp,
     required this.level,
     required this.strength,
     required this.dexterity,
@@ -135,6 +169,7 @@ class HeroStatsSRD {
     return HeroStatsSRD(
       hp: _readInt(json['hp']),
       currentHp: _readInt(json['currentHp']),
+      currentExp: _readInt(json['currentExp']),
       level: _readInt(json['level'], fallback: 1),
       strength: _readInt(json['strength'], fallback: 10),
       dexterity: _readInt(json['dexterity'], fallback: 10),
@@ -148,6 +183,7 @@ class HeroStatsSRD {
   Map<String, dynamic> toJson() => {
     'hp': hp,
     'currentHp': currentHp,
+    'currentExp': currentExp,
     'level': level,
     'strength': strength,
     'dexterity': dexterity,

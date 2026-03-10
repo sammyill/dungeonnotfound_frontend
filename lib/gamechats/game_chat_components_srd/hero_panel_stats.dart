@@ -11,7 +11,7 @@ class HeroPanelsStats extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final double statsHeight = constraints.maxHeight * 0.30;
+        final double statsHeight = constraints.maxHeight * 0.40;
 
         return Stack(
           fit: StackFit.expand,
@@ -104,6 +104,52 @@ class CharacterStats extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Widget> rows = [];
 
+    final bool isMaxLevel = stats.level >= heroMaxLevel;
+    final int expCap = expCapForLevel(stats.level);
+    final double healthProgress = stats.hp <= 0
+        ? 0
+        : _clampProgress(stats.currentHp / stats.hp);
+    final double expProgress = isMaxLevel
+        ? 1
+        : _clampProgress(stats.currentExp / expCap);
+    final String expValueText = isMaxLevel
+        ? 'Max/Max'
+        : '${stats.currentExp}/$expCap';
+
+    rows.add(
+      SizedBox(
+        height: 42,
+        child: Row(
+          children: [
+            Expanded(
+              child: DNDProgressDisplay(
+                icon: Icons.favorite,
+                iconColor: const Color(0xFFD65245),
+                statName: 'Health',
+                valueText: '${stats.currentHp}/${stats.hp}',
+                progress: healthProgress,
+                barColor: const Color(0xFFD65245),
+                progressKey: const ValueKey('hero-health-fill'),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: DNDProgressDisplay(
+                icon: Icons.auto_awesome,
+                iconColor: const Color(0xFF4C8DDA),
+                statName: 'EXP',
+                valueText: expValueText,
+                progress: expProgress,
+                barColor: const Color(0xFF4C8DDA),
+                progressKey: const ValueKey('hero-exp-fill'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    rows.add(const SizedBox(height: 8));
+
     for (int i = 0; i < _charstats.length; i += 2) {
       final _StatField left = _charstats[i];
       final _StatField? right = i + 1 < _charstats.length
@@ -146,6 +192,16 @@ class CharacterStats extends StatelessWidget {
       width: double.infinity,
       child: Column(mainAxisSize: MainAxisSize.min, children: rows),
     );
+  }
+
+  double _clampProgress(num value) {
+    if (!value.isFinite || value <= 0) {
+      return 0;
+    }
+    if (value >= 1) {
+      return 1;
+    }
+    return value.toDouble();
   }
 }
 
@@ -233,6 +289,117 @@ class DNDStatsDisplay extends StatelessWidget {
                         ],
                       ),
                     ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class DNDProgressDisplay extends StatelessWidget {
+  final IconData icon;
+  final Color iconColor;
+  final String statName;
+  final String valueText;
+  final double progress;
+  final Color barColor;
+  final Key? progressKey;
+
+  const DNDProgressDisplay({
+    super.key,
+    required this.icon,
+    required this.iconColor,
+    required this.statName,
+    required this.valueText,
+    required this.progress,
+    required this.barColor,
+    this.progressKey,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        AspectRatio(
+          aspectRatio: 1,
+          child: Center(child: Icon(icon, color: iconColor, size: 28)),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: ClipRRect(
+            borderRadius: DNDStatsDisplay.borderRadius,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.asset(
+                  DNDStatsDisplay.scrollBackgroundAssetPath,
+                  fit: BoxFit.fill,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 6,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              statName,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Color.fromARGB(255, 0, 0, 0),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            valueText,
+                            style: const TextStyle(
+                              color: Color.fromARGB(255, 0, 0, 0),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(999),
+                        child: SizedBox(
+                          height: 5,
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              const DecoratedBox(
+                                decoration: BoxDecoration(
+                                  color: Color.fromARGB(255, 213, 205, 188),
+                                ),
+                              ),
+                              FractionallySizedBox(
+                                key: progressKey,
+                                alignment: Alignment.centerLeft,
+                                widthFactor: progress,
+                                child: DecoratedBox(
+                                  decoration: BoxDecoration(color: barColor),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
