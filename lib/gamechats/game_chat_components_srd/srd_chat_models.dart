@@ -1,8 +1,9 @@
 enum PartyChatInteractionType {
   freeMessage,
-  dmLevelUp,
+  dmLevelUpRequest,
   playerLevelUp,
   dmAction,
+  dmActionRequest,
   playerAction,
 }
 
@@ -11,12 +12,14 @@ extension PartyChatInteractionTypeCodec on PartyChatInteractionType {
     switch (this) {
       case PartyChatInteractionType.freeMessage:
         return 'free_message';
-      case PartyChatInteractionType.dmLevelUp:
-        return 'dm_level_up';
+      case PartyChatInteractionType.dmLevelUpRequest:
+        return 'dm_level_up_request';
       case PartyChatInteractionType.playerLevelUp:
         return 'player_level_up';
       case PartyChatInteractionType.dmAction:
         return 'dm_action';
+      case PartyChatInteractionType.dmActionRequest:
+        return 'dm_action_request';
       case PartyChatInteractionType.playerAction:
         return 'player_action';
     }
@@ -26,12 +29,14 @@ extension PartyChatInteractionTypeCodec on PartyChatInteractionType {
     switch (this) {
       case PartyChatInteractionType.freeMessage:
         return 'Free Message';
-      case PartyChatInteractionType.dmLevelUp:
-        return 'DM Level Up';
+      case PartyChatInteractionType.dmLevelUpRequest:
+        return 'DM Level Up Request';
       case PartyChatInteractionType.playerLevelUp:
         return 'Player Level Up';
       case PartyChatInteractionType.dmAction:
         return 'DM Action';
+      case PartyChatInteractionType.dmActionRequest:
+        return 'DM Action Request';
       case PartyChatInteractionType.playerAction:
         return 'Player Action';
     }
@@ -41,12 +46,14 @@ extension PartyChatInteractionTypeCodec on PartyChatInteractionType {
     switch ((rawValue ?? '').trim().toLowerCase()) {
       case 'free_message':
         return PartyChatInteractionType.freeMessage;
-      case 'dm_level_up':
-        return PartyChatInteractionType.dmLevelUp;
+      case 'dm_level_up_request':
+        return PartyChatInteractionType.dmLevelUpRequest;
       case 'player_level_up':
         return PartyChatInteractionType.playerLevelUp;
       case 'dm_action':
         return PartyChatInteractionType.dmAction;
+      case 'dm_action_request':
+        return PartyChatInteractionType.dmActionRequest;
       case 'player_action':
         return PartyChatInteractionType.playerAction;
       default:
@@ -108,12 +115,14 @@ sealed class PartyChatInteraction {
     switch (type) {
       case PartyChatInteractionType.freeMessage:
         return FreeMessageInteraction.fromJson(json);
-      case PartyChatInteractionType.dmLevelUp:
-        return DmLevelUpInteraction.fromJson(json);
+      case PartyChatInteractionType.dmLevelUpRequest:
+        return DmLevelUpRequestInteraction.fromJson(json);
       case PartyChatInteractionType.playerLevelUp:
         return PlayerLevelUpInteraction.fromJson(json);
       case PartyChatInteractionType.dmAction:
         return DmActionInteraction.fromJson(json);
+      case PartyChatInteractionType.dmActionRequest:
+        return DmActionRequestInteraction.fromJson(json);
       case PartyChatInteractionType.playerAction:
         return PlayerActionInteraction.fromJson(json);
     }
@@ -126,6 +135,23 @@ sealed class PartyChatInteraction {
     'type': type.wireValue,
     'owner_id': ownerId,
     'owner_label': ownerLabel,
+  };
+}
+
+sealed class PartyChatRequestInteraction extends PartyChatInteraction {
+  final String targetHeroId;
+
+  const PartyChatRequestInteraction({
+    required super.messageId,
+    required super.type,
+    required super.ownerId,
+    required super.ownerLabel,
+    required this.targetHeroId,
+  });
+
+  Map<String, dynamic> toJsonRequestBase() => {
+    ...toJsonBase(),
+    'target_hero_id': targetHeroId,
   };
 }
 
@@ -155,28 +181,30 @@ class FreeMessageInteraction extends PartyChatInteraction {
   };
 }
 
-class DmLevelUpInteraction extends PartyChatInteraction {
+class DmLevelUpRequestInteraction extends PartyChatRequestInteraction {
   final String messageText;
 
-  const DmLevelUpInteraction({
+  const DmLevelUpRequestInteraction({
     required super.messageId,
     required super.ownerId,
     required super.ownerLabel,
+    required super.targetHeroId,
     required this.messageText,
-  }) : super(type: PartyChatInteractionType.dmLevelUp);
+  }) : super(type: PartyChatInteractionType.dmLevelUpRequest);
 
-  factory DmLevelUpInteraction.fromJson(Map<String, dynamic> json) {
-    return DmLevelUpInteraction(
+  factory DmLevelUpRequestInteraction.fromJson(Map<String, dynamic> json) {
+    return DmLevelUpRequestInteraction(
       messageId: _readString(json['message_id']),
       ownerId: _readString(json['owner_id']),
       ownerLabel: _readString(json['owner_label']),
+      targetHeroId: _readString(json['target_hero_id']),
       messageText: _readString(json['message_text']),
     );
   }
 
   @override
   Map<String, dynamic> toJson() => {
-    ...toJsonBase(),
+    ...toJsonRequestBase(),
     'message_text': messageText,
   };
 }
@@ -254,6 +282,34 @@ class DmActionInteraction extends PartyChatInteraction {
     ...toJsonBase(),
     'message_text': messageText,
     'action_target': actionTarget,
+  };
+}
+
+class DmActionRequestInteraction extends PartyChatRequestInteraction {
+  final String messageText;
+
+  const DmActionRequestInteraction({
+    required super.messageId,
+    required super.ownerId,
+    required super.ownerLabel,
+    required super.targetHeroId,
+    required this.messageText,
+  }) : super(type: PartyChatInteractionType.dmActionRequest);
+
+  factory DmActionRequestInteraction.fromJson(Map<String, dynamic> json) {
+    return DmActionRequestInteraction(
+      messageId: _readString(json['message_id']),
+      ownerId: _readString(json['owner_id']),
+      ownerLabel: _readString(json['owner_label']),
+      targetHeroId: _readString(json['target_hero_id']),
+      messageText: _readString(json['message_text']),
+    );
+  }
+
+  @override
+  Map<String, dynamic> toJson() => {
+    ...toJsonRequestBase(),
+    'message_text': messageText,
   };
 }
 

@@ -253,10 +253,11 @@ void main() {
       },
       {
         'message_id': 'msg_002',
-        'type': 'dm_level_up',
+        'type': 'dm_level_up_request',
         'owner_id': 'dm_llm',
         'owner_label': 'DM',
         'message_text': 'Level up now',
+        'target_hero_id': 'option1',
       },
       {
         'message_id': 'msg_003',
@@ -280,6 +281,14 @@ void main() {
       },
       {
         'message_id': 'msg_005',
+        'type': 'dm_action_request',
+        'owner_id': 'dm_llm',
+        'owner_label': 'DM',
+        'message_text': 'Arden, what do you do?',
+        'target_hero_id': 'option1',
+      },
+      {
+        'message_id': 'msg_006',
         'type': 'player_action',
         'owner_id': 'option3',
         'owner_label': 'Torin',
@@ -326,6 +335,34 @@ void main() {
       expect(parsed.last.messageId, 'm2');
       expect(parsed.first.type, PartyChatInteractionType.freeMessage);
       expect(parsed.last.type, PartyChatInteractionType.playerAction);
+    });
+
+    test('dm request interactions preserve target hero id', () {
+      final levelUpRequest =
+          PartyChatInteraction.fromJson({
+                'message_id': 'm_req_1',
+                'type': 'dm_level_up_request',
+                'owner_id': 'dm_llm',
+                'owner_label': 'DM',
+                'message_text': 'Spend your level points',
+                'target_hero_id': 'option1',
+              })
+              as DmLevelUpRequestInteraction;
+      final actionRequest =
+          PartyChatInteraction.fromJson({
+                'message_id': 'm_req_2',
+                'type': 'dm_action_request',
+                'owner_id': 'dm_llm',
+                'owner_label': 'DM',
+                'message_text': 'Describe your move',
+                'target_hero_id': 'option2',
+              })
+              as DmActionRequestInteraction;
+
+      expect(levelUpRequest.targetHeroId, 'option1');
+      expect(actionRequest.targetHeroId, 'option2');
+      expect(levelUpRequest.toJson()['target_hero_id'], 'option1');
+      expect(actionRequest.toJson()['target_hero_id'], 'option2');
     });
 
     test('clamps player_action roll to 0..20', () {

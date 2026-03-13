@@ -2,19 +2,38 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+String _readString(dynamic value, {String fallback = ''}) {
+  if (value == null) {
+    return fallback;
+  }
+  if (value is String) {
+    return value;
+  }
+  return value.toString();
+}
+
 class GameSessionState {
   final List<Map<String, dynamic>> heroesJson;
   final List<Map<String, dynamic>> chatJson;
+  final Map<String, dynamic> playerHeroJson;
 
-  const GameSessionState({required this.heroesJson, required this.chatJson});
+  const GameSessionState({
+    required this.heroesJson,
+    required this.chatJson,
+    required this.playerHeroJson,
+  });
+
+  String get playerHeroId => _readString(playerHeroJson['hero_id']);
 
   GameSessionState copyWith({
     List<Map<String, dynamic>>? heroesJson,
     List<Map<String, dynamic>>? chatJson,
+    Map<String, dynamic>? playerHeroJson,
   }) {
     return GameSessionState(
       heroesJson: heroesJson ?? this.heroesJson,
       chatJson: chatJson ?? this.chatJson,
+      playerHeroJson: playerHeroJson ?? this.playerHeroJson,
     );
   }
 }
@@ -36,10 +55,15 @@ class GameSessionController extends AsyncNotifier<GameSessionState> {
     // final chatJson = await _loadChatFromBackend();
     final heroesJson = _cloneJsonList(_mockHeroesJson);
     final chatJson = _cloneJsonList(_mockChatJson);
+    final playerHeroJson = _cloneJsonMap(_mockPlayerHeroJson);
 
     _startChatUpdatesSubscription();
 
-    return GameSessionState(heroesJson: heroesJson, chatJson: chatJson);
+    return GameSessionState(
+      heroesJson: heroesJson,
+      chatJson: chatJson,
+      playerHeroJson: playerHeroJson,
+    );
   }
 
   void _startChatUpdatesSubscription() {
@@ -89,6 +113,12 @@ class GameSessionController extends AsyncNotifier<GameSessionState> {
 List<Map<String, dynamic>> _cloneJsonList(List<Map<String, dynamic>> source) {
   return source.map(Map<String, dynamic>.from).toList(growable: false);
 }
+
+Map<String, dynamic> _cloneJsonMap(Map<String, dynamic> source) {
+  return Map<String, dynamic>.from(source);
+}
+
+final Map<String, dynamic> _mockPlayerHeroJson = {'hero_id': 'option1'};
 
 final List<Map<String, dynamic>> _mockHeroesJson = [
   {
@@ -579,39 +609,49 @@ final List<Map<String, dynamic>> _mockChatJson = [
   },
   {
     'message_id': 'msg_002',
-    'type': 'dm_level_up',
+    'type': 'dm_level_up_request',
     'owner_id': 'dm_llm',
     'owner_label': 'DM',
     'message_text':
-        'Lyra has gained enough experience to level up. Assign your improvements before continuing.',
+        'Arden has gained enough experience to level up. Assign five stat points before continuing.',
+    'target_hero_id': 'option1',
   },
   {
     'message_id': 'msg_003',
     'type': 'player_level_up',
-    'owner_id': 'option2',
-    'owner_label': 'Lyra',
-    'strength': 11,
-    'dexterity': 18,
-    'constitution': 12,
-    'intelligence': 14,
-    'wisdom': 13,
-    'charisma': 14,
+    'owner_id': 'option1',
+    'owner_label': 'Arden',
+    'strength': 18,
+    'dexterity': 13,
+    'constitution': 16,
+    'intelligence': 11,
+    'wisdom': 11,
+    'charisma': 9,
   },
   {
     'message_id': 'msg_004',
     'type': 'dm_action',
     'owner_id': 'dm_llm',
     'owner_label': 'DM',
-    'message_text': 'Torin, make a stealth check while approaching the sentry.',
-    'action_target': 'option3',
+    'message_text': 'Arden, hold the broken arch and watch the sentry path.',
+    'action_target': 'option1',
   },
   {
-    'message_id': 'msg_005',
-    'type': 'player_action',
-    'owner_id': 'option3',
-    'owner_label': 'Torin',
+    'message_id': 'msg_006',
+    'type': 'dm_action_request',
+    'owner_id': 'dm_llm',
+    'owner_label': 'DM',
     'message_text':
-        'I slip into the shadows and move behind the broken pillar.',
+        'Arden, a sentry is moving toward your position. Describe your action and roll.',
+    'target_hero_id': 'option1',
+  },
+  {
+    'message_id': 'msg_007',
+    'type': 'player_action',
+    'owner_id': 'option1',
+    'owner_label': 'Arden',
+    'message_text':
+        'I brace behind the archway and wait for the sentry to step into reach.',
     'roll': 17,
   },
 ];

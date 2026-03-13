@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'gamechats/game_chat_srd.dart';
 import 'dart:math';
 import "gamechats/game_chat_providers.dart";
+
 void main() {
   runApp(
     // Add ProviderScope above your app
@@ -28,13 +29,14 @@ class MyApp extends StatelessWidget {
             data: (gameSession) => GameChatPageSRD(
               heroesJson: gameSession.heroesJson,
               chatJson: gameSession.chatJson,
+              playerHeroJson: gameSession.playerHeroJson,
             ),
-            loading: () =>
-                const Scaffold(body: Center(child: CircularProgressIndicator())),
-            error: (error, stackTrace) =>
-                Scaffold(
-                  body: Center(child: Text('Failed to load session: $error')),
-                ),
+            loading: () => const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            ),
+            error: (error, stackTrace) => Scaffold(
+              body: Center(child: Text('Failed to load session: $error')),
+            ),
           );
         },
       ),
